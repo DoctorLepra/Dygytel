@@ -34,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 'info' => Color::hex('#0fd4d4'),
             ])
             ->font('Inter')
+            ->favicon(asset('icono.png'))
             ->brandLogo(asset('Logo2.png'))
             ->brandLogoHeight('3.5rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

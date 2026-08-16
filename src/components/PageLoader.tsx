@@ -11,7 +11,7 @@ export function PageLoader() {
       {/* Central Brand Logo & Spinner */}
       <div className="relative z-10 flex flex-col items-center gap-6">
         <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl glass-strong shadow-glow p-4">
-          <img src="/Logo2.png" alt="Dygytel Telecomunicaciones" className="h-12 w-auto animate-pulse" />
+          <img src="/icono.png" alt="Dygytel Telecomunicaciones" className="h-14 w-auto object-contain animate-pulse" />
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0FD4D4] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-4 w-4 bg-[#068DBB]"></span>
