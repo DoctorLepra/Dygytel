@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Product } from "./products";
+import { Product, products as staticProducts } from "./products";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 
 const parseArray = (data: any): string[] => {
   if (Array.isArray(data)) return data.map(i => String(i));
@@ -50,26 +50,60 @@ const formatPrice = (priceVal: any): string => {
 
 const resolveImages = (img: any): string[] => {
   const parsed = parseArray(img);
+  const baseUrl = API_URL.replace(/\/api\/?$/, '');
   if (parsed.length > 0) {
-    return parsed.map(i => i.startsWith('http') ? i : `http://127.0.0.1:8000/storage/${i}`);
+    return parsed.map(i => i.startsWith('http') ? i : `${baseUrl}/storage/${i}`);
   }
   if (typeof img === 'string' && img.trim()) {
-    return [img.startsWith('http') ? img : `http://127.0.0.1:8000/storage/${img}`];
+    return [img.startsWith('http') ? img : `${baseUrl}/storage/${img}`];
   }
   return [];
 };
 
-// Fetch all products
+// Fetch all products with safe fallback
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch(`${API_URL}/products`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch products");
+  try {
+    const response = await fetch(`${API_URL}/products`);
+    if (!response.ok) return staticProducts;
+    const data = await response.json();
+    if (!Array.isArray(data) || data.length === 0) return staticProducts;
+    
+    return data.map((item: any) => {
+      const imgs = resolveImages(item.image);
+      return {
+        sku: item.sku,
+        name: item.name,
+        description: item.description,
+        longDescription: item.description,
+        price: formatPrice(item.price),
+        image: imgs[0] || "",
+        images: imgs,
+        category: item.category,
+        brand: item.brand,
+        badge: null,
+        features: parseArray(item.features),
+        inBox: parseArray(item.in_the_box),
+        specs: parseSpecs(item.specs),
+      };
+    });
+  } catch (error) {
+    console.warn("API Products unreachable, using static fallback:", error);
+    return staticProducts;
   }
-  const data = await response.json();
-  
-  // Map backend model to frontend Product type
-  return data.map((item: any) => {
+};
+
+// Fetch single product by SKU with safe fallback
+export const fetchProductBySku = async (sku: string): Promise<Product> => {
+  try {
+    const response = await fetch(`${API_URL}/products/${sku}`);
+    if (!response.ok) {
+      const local = staticProducts.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
+      if (local) return local;
+      throw new Error("Product not found");
+    }
+    const item = await response.json();
     const imgs = resolveImages(item.image);
+    
     return {
       sku: item.sku,
       name: item.name,
@@ -85,56 +119,45 @@ export const fetchProducts = async (): Promise<Product[]> => {
       inBox: parseArray(item.in_the_box),
       specs: parseSpecs(item.specs),
     };
-  });
-};
-
-// Fetch single product by SKU
-export const fetchProductBySku = async (sku: string): Promise<Product> => {
-  const response = await fetch(`${API_URL}/products/${sku}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch product");
+  } catch (error) {
+    const local = staticProducts.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
+    if (local) return local;
+    throw error;
   }
-  const item = await response.json();
-  const imgs = resolveImages(item.image);
-  
-  return {
-    sku: item.sku,
-    name: item.name,
-    description: item.description,
-    longDescription: item.description,
-    price: formatPrice(item.price),
-    image: imgs[0] || "",
-    images: imgs,
-    category: item.category,
-    brand: item.brand,
-    badge: null,
-    features: parseArray(item.features),
-    inBox: parseArray(item.in_the_box),
-    specs: parseSpecs(item.specs),
-  };
 };
 
-// Fetch categories
+// Fetch categories with safe fallback
 export const fetchCategories = async (): Promise<string[]> => {
-  const response = await fetch(`${API_URL}/categories`);
-  if (!response.ok) return [];
-  return response.json();
-};
-
-// Fetch brands
-export const fetchBrands = async (): Promise<string[]> => {
-  const response = await fetch(`${API_URL}/brands`);
-  if (!response.ok) return [];
-  return response.json();
-};
-
-// Fetch web content
-export const fetchWebContent = async (): Promise<Record<string, Record<string, string>>> => {
-  const response = await fetch(`${API_URL}/content`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch web content");
+  try {
+    const response = await fetch(`${API_URL}/categories`);
+    if (!response.ok) return [];
+    return await response.json();
+  } catch {
+    return [];
   }
-  return response.json();
+};
+
+// Fetch brands with safe fallback
+export const fetchBrands = async (): Promise<string[]> => {
+  try {
+    const response = await fetch(`${API_URL}/brands`);
+    if (!response.ok) return [];
+    return await response.json();
+  } catch {
+    return [];
+  }
+};
+
+// Fetch web content with safe fallback
+export const fetchWebContent = async (): Promise<Record<string, Record<string, string>>> => {
+  try {
+    const response = await fetch(`${API_URL}/content`);
+    if (!response.ok) return {};
+    return await response.json();
+  } catch (error) {
+    console.warn("API WebContent unreachable, using static defaults:", error);
+    return {};
+  }
 };
 
 // --- React Query Hooks ---
@@ -143,6 +166,7 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
+    retry: 1,
   });
 };
 
@@ -150,6 +174,7 @@ export const useCategories = () => {
   return useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
+    retry: 1,
   });
 };
 
@@ -157,6 +182,7 @@ export const useBrands = () => {
   return useQuery({
     queryKey: ["brands"],
     queryFn: fetchBrands,
+    retry: 1,
   });
 };
 
@@ -165,6 +191,7 @@ export const useProduct = (sku: string) => {
     queryKey: ["product", sku],
     queryFn: () => fetchProductBySku(sku),
     enabled: !!sku,
+    retry: 1,
   });
 };
 
@@ -174,5 +201,6 @@ export const useWebContent = () => {
     queryFn: fetchWebContent,
     staleTime: 1000 * 60 * 10, // 10 minutes cache
     gcTime: 1000 * 60 * 60, // 1 hour memory retention
+    retry: 1,
   });
 };
