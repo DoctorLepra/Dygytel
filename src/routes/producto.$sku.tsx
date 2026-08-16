@@ -2,6 +2,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { useProduct, useProducts } from "../lib/api";
+import { PageLoader } from "../components/PageLoader";
 
 export const Route = createFileRoute("/producto/$sku")({
   component: ProductDetailPageWrapper,
@@ -13,14 +14,7 @@ function ProductDetailPageWrapper() {
   const { data: allProducts = [] } = useProducts();
 
   if (isLoading) {
-    return (
-      <div className="relative min-h-screen bg-background text-foreground flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 rounded-full border-4 border-[#068DBB] border-t-transparent animate-spin" />
-          <p className="mt-4 text-[#068DBB] font-mono text-xs uppercase tracking-widest">Cargando producto...</p>
-        </div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (error || !product) {

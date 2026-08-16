@@ -50,12 +50,16 @@ export const Route = createFileRoute("/catalogo")({
   component: CatalogoPage,
 });
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 8;
 
 function CatalogoPage() {
   const { data: products = [], isLoading, error } = useProducts();
   const { data: fetchedCategories = [] } = useCategories();
   const { data: fetchedBrands = [] } = useBrands();
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   const [active, setActive] = useState<string>("Todos");
   const [activeBrand, setActiveBrand] = useState<string>("Todas");

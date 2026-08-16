@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { useWebContent } from "../lib/api";
+import { PageLoader } from "../components/PageLoader";
 
 export const Route = createFileRoute("/contacto")({
   head: () => ({
@@ -111,8 +112,12 @@ function renderContactIcon(iconKey?: string) {
 }
 
 function ContactoPage() {
-  const { data: webContent } = useWebContent();
+  const { data: webContent, isLoading } = useWebContent();
   const contactContent = webContent?.contact || {};
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   const contactList = useMemo(() => {
     if (Array.isArray(contactContent.contact_items) && contactContent.contact_items.length > 0) {

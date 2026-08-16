@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { useWebContent } from "../lib/api";
+import { PageLoader } from "../components/PageLoader";
 
 export const Route = createFileRoute("/servicios")({
   head: () => ({
@@ -216,8 +217,12 @@ const defaultFaqs = [
 ];
 
 function ServiciosPage() {
-  const { data: webContent } = useWebContent();
+  const { data: webContent, isLoading } = useWebContent();
   const servicesContent = webContent?.services || {};
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   const servicesList = useMemo(() => {
     if (Array.isArray(servicesContent.services_list) && servicesContent.services_list.length > 0) {

@@ -22,6 +22,7 @@ export const Route = createFileRoute("/")({
 
 
 import { useProducts, useWebContent } from "../lib/api";
+import { PageLoader } from "../components/PageLoader";
 
 const brands = ["MOTOROLA", "HYTERA", "KENWOOD", "ICOM", "VERTEX", "TAIT", "SEPURA"];
 
@@ -47,11 +48,15 @@ const services = [
 ];
 
 function Landing() {
-  const { data: allProducts = [], isLoading } = useProducts();
+  const { data: allProducts = [], isLoading: isLoadingProducts } = useProducts();
   const topProducts = allProducts.slice(0, 3);
   
-  const { data: content } = useWebContent();
+  const { data: content, isLoading: isLoadingContent } = useWebContent();
   const homeContent = content?.home || {};
+
+  if (isLoadingContent || isLoadingProducts) {
+    return <PageLoader />;
+  }
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* Background halos */}

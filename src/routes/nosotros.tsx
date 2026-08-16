@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useWebContent } from "../lib/api";
+import { PageLoader } from "../components/PageLoader";
 
 export const Route = createFileRoute("/nosotros")({
   head: () => ({
@@ -110,8 +111,12 @@ const defaultCertifications = [
 ];
 
 function NosotrosPage() {
-  const { data: webContent } = useWebContent();
+  const { data: webContent, isLoading } = useWebContent();
   const aboutContent = webContent?.about || {};
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   const certsList = useMemo(() => {
     if (Array.isArray(aboutContent.certifications) && aboutContent.certifications.length > 0) {

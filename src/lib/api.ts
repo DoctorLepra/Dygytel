@@ -172,5 +172,7 @@ export const useWebContent = () => {
   return useQuery({
     queryKey: ["webContent"],
     queryFn: fetchWebContent,
+    staleTime: 1000 * 60 * 10, // 10 minutes cache
+    gcTime: 1000 * 60 * 60, // 1 hour memory retention
   });
 };
