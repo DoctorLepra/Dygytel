@@ -4,7 +4,8 @@ import productHandheld from "../assets/product-handheld.jpg";
 import productMobile from "../assets/product-mobile.jpg";
 import productRepeater from "../assets/product-repeater.jpg";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { products, type Category } from "../lib/products";
+import { useProducts, useCategories, useBrands } from "../lib/api";
+import { type Category } from "../lib/products";
 import {
   Carousel,
   CarouselContent,
@@ -49,11 +50,14 @@ export const Route = createFileRoute("/catalogo")({
   component: CatalogoPage,
 });
 
-const categories: Category[] = ["Todos", "Portátiles", "Móviles", "Repetidores", "Accesorios", "Radios POC", "Bases Móviles", "Antenas", "Baterías y accesorios"];
 const ITEMS_PER_PAGE = 9;
 
 function CatalogoPage() {
-  const [active, setActive] = useState<Category>("Todos");
+  const { data: products = [], isLoading, error } = useProducts();
+  const { data: fetchedCategories = [] } = useCategories();
+  const { data: fetchedBrands = [] } = useBrands();
+
+  const [active, setActive] = useState<string>("Todos");
   const [activeBrand, setActiveBrand] = useState<string>("Todas");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,7 +67,17 @@ function CatalogoPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const uniqueBrands = useMemo(() => ["Todas", ...Array.from(new Set(products.map(p => p.brand))).sort()], []);
+  const categories = useMemo(() => {
+    const fromProducts = Array.from(new Set(products.map(p => p.category))).filter(Boolean);
+    const combined = Array.from(new Set([...fetchedCategories, ...fromProducts])).sort();
+    return ["Todos", ...combined];
+  }, [fetchedCategories, products]);
+
+  const uniqueBrands = useMemo(() => {
+    const fromProducts = Array.from(new Set(products.map(p => p.brand))).filter(Boolean);
+    const combined = Array.from(new Set([...fetchedBrands, ...fromProducts])).sort();
+    return ["Todas", ...combined];
+  }, [fetchedBrands, products]);
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -119,7 +133,7 @@ function CatalogoPage() {
             <span className="text-foreground/30">/</span>
             <span className="text-foreground/70">Catálogo</span>
           </div>
-          <h1 className="mt-4 text-5xl font-extrabold leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl">
+          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl">
             Catálogo <span className="text-gradient-brand">completo</span>
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
@@ -200,14 +214,20 @@ function CatalogoPage() {
       <section className="mx-auto max-w-7xl px-6 pb-24">
         <div className="mb-6 flex items-center justify-between">
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
-            {filtered.length} productos
+            {isLoading ? 'Cargando...' : `${filtered.length} productos`}
           </span>
           <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
             Categoría · {active}
           </span>
         </div>
 
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="glass h-[400px] animate-pulse rounded-3xl" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="glass rounded-3xl p-16 text-center">
             <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
               Sin resultados
@@ -259,10 +279,7 @@ function CatalogoPage() {
                 </div>
                 <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
                   <span className="text-lg font-extrabold">
-                    {(() => {
-                      const num = parseFloat(p.price.replace(/[^0-9.]/g, ''));
-                      return "$" + (num * 1000).toLocaleString("es-CO");
-                    })()}
+                    {p.price}
                   </span>
                   <Link
                     to="/producto/$sku"
@@ -331,7 +348,7 @@ function CatalogoPage() {
               </p>
             </div>
             <a
-              href="https://api.whatsapp.com/send/?phone=573193053916"
+              href="https://api.whatsapp.com/send/?phone=573193053916&text=Hola,%20quisiera%20cotizar%20un%20producto&type=phone_number&app_absent=0"
               target="_blank"
               className="bg-gradient-brand ptt-button inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-glow hover:brightness-110 active:scale-95"
             >

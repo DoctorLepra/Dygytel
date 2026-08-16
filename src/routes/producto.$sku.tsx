@@ -1,41 +1,34 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, useParams } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { getProductBySku, products } from "../lib/products";
+import { useProduct, useProducts } from "../lib/api";
 
 export const Route = createFileRoute("/producto/$sku")({
-  loader: ({ params }) => {
-    const product = getProductBySku(params.sku);
-    if (!product) throw notFound();
-    return { product };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return {
-        meta: [
-          { title: "Producto no encontrado — Dygytel" },
-          { name: "robots", content: "noindex" },
-        ],
-      };
-    }
-    const { product } = loaderData;
-    const title = `${product.name} (${product.sku}) — Dygytel`;
-    const description = `${product.description} Marca ${product.brand}. Categoría ${product.category}.`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "product" },
-        { name: "twitter:card", content: "summary_large_image" },
-      ],
-    };
-  },
-  notFoundComponent: ProductNotFound,
-  component: ProductDetailPage,
+  component: ProductDetailPageWrapper,
 });
 
+function ProductDetailPageWrapper() {
+  const { sku } = Route.useParams();
+  const { data: product, isLoading, error } = useProduct(sku);
+  const { data: allProducts = [] } = useProducts();
 
+  if (isLoading) {
+    return (
+      <div className="relative min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-12 w-12 rounded-full border-4 border-[#068DBB] border-t-transparent animate-spin" />
+          <p className="mt-4 text-[#068DBB] font-mono text-xs uppercase tracking-widest">Cargando producto...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return <ProductNotFound />;
+  }
+
+  return <ProductDetailPage product={product} allProducts={allProducts} />;
+}
 
 function ProductNotFound() {
   return (
@@ -59,9 +52,22 @@ function ProductNotFound() {
   );
 }
 
-function ProductDetailPage() {
-  const { product } = Route.useLoaderData();
-  const related = products
+function ProductDetailPage({ product, allProducts }: { product: any, allProducts: any[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const images = (product.images && product.images.length > 0)
+    ? product.images
+    : (product.image ? [product.image] : []);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  const related = allProducts
     .filter((p) => p.category === product.category && p.sku !== product.sku)
     .slice(0, 3);
 
@@ -99,42 +105,43 @@ function ProductDetailPage() {
           <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-2">
             {/* Image */}
             <div className="glass relative overflow-hidden rounded-3xl p-8">
-              {product.badge && (
-                <span className="absolute right-8 top-8 z-10 rounded-full bg-gradient-brand px-3 py-1 font-mono text-[9px] font-bold uppercase tracking-widest text-white shadow-glow">
-                  {product.badge}
-                </span>
-              )}
+
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/60">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/10 to-transparent" />
                 <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
+                  src={images[activeIndex] || product.image}
+                  alt={`${product.name} - Vista ${activeIndex + 1}`}
+                  className="h-full w-full object-cover transition-opacity duration-500"
                 />
               </div>
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    className="glass-subtle aspect-square overflow-hidden rounded-xl opacity-70"
-                  >
-                    <img
-                      src={product.image}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
+              {images.length > 1 && (
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {images.map((img: string, i: number) => (
+                    <button
+                      key={i}
+                      onClick={() => setActiveIndex(i)}
+                      className={`glass-subtle relative h-20 w-20 flex-none overflow-hidden rounded-xl transition-all ${
+                        activeIndex === i ? "opacity-100 ring-2 ring-[#068DBB]" : "opacity-60 hover:opacity-100"
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`Miniatura ${i + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Info */}
             <div className="flex flex-col">
               <div className="flex items-center gap-3">
-                <span className="glass rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-[#068DBB]">
+                <span className="glass rounded-full px-4 py-1.5 font-mono text-[12.5px] font-bold uppercase tracking-widest text-[#068DBB]">
                   {product.brand}
                 </span>
-                <span className="glass rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-foreground/70">
+                <span className="glass rounded-full px-4 py-1.5 font-mono text-[12.5px] font-bold uppercase tracking-widest text-foreground/70">
                   {product.category}
                 </span>
               </div>
@@ -148,10 +155,7 @@ function ProductDetailPage() {
 
               <div className="mt-8 flex items-baseline gap-3">
                 <span className="text-4xl font-extrabold">
-                  {(() => {
-                    const num = parseFloat(product.price.replace(/[^0-9.]/g, ''));
-                    return "$" + (num * 1000).toLocaleString("es-CO");
-                  })()}
+                  {product.price}
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                    · IVA incluido
@@ -160,7 +164,7 @@ function ProductDetailPage() {
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
-                  href="https://api.whatsapp.com/send/?phone=573193053916"
+                  href={`https://api.whatsapp.com/send/?phone=573193053916&text=${encodeURIComponent(`Hola quisiera cotizar el producto ${product.name} que vi en la pagina web.\n\nhttps://dygytel.com/producto/${product.sku}`)}`}
                   target="_blank"
                   className="bg-gradient-brand ptt-button inline-flex items-center gap-2 rounded-full px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-glow hover:brightness-110 active:scale-95"
                 >
@@ -182,10 +186,10 @@ function ProductDetailPage() {
                   { t: "Soporte", v: "24/7" },
                 ].map((b) => (
                   <div key={b.t} className="glass rounded-2xl p-4 text-center">
-                    <div className="font-mono text-[9px] font-bold uppercase tracking-widest text-[#068DBB]">
+                    <div className="font-mono text-xs font-bold uppercase tracking-widest text-[#068DBB]">
                       {b.t}
                     </div>
-                    <div className="mt-1 text-sm font-bold">{b.v}</div>
+                    <div className="mt-1 text-lg font-bold">{b.v}</div>
                   </div>
                 ))}
               </div>
@@ -297,10 +301,7 @@ function ProductDetailPage() {
                     <h3 className="mt-2 text-lg font-bold tracking-tight">{p.name}</h3>
                     <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
                       <span className="font-extrabold">
-                        {(() => {
-                          const num = parseFloat(p.price.replace(/[^0-9.]/g, ''));
-                          return "$" + (num * 1000).toLocaleString("es-CO");
-                        })()}
+                        {p.price}
                       </span>
                       <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#068DBB]">
                         Ver detalle →
