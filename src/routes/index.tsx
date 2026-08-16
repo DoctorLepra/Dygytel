@@ -12,14 +12,12 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Tienda especializada en radios de telecomunicación profesional. Portátiles, móviles vehiculares, repetidores y servicios de instalación, mantenimiento y licencias.",
+          "Tienda especializada en radios de telecomunicación profesional. Portátiles, móviles vehiculares, repetidores y servicios de ingeniería.",
       },
     ],
   }),
   component: Landing,
 });
-
-
 
 import { useProducts, useWebContent } from "../lib/api";
 import { PageLoader } from "../components/PageLoader";
@@ -53,12 +51,11 @@ function Landing() {
   
   const { data: content, isLoading: isLoadingContent } = useWebContent();
   const homeContent = content?.home || {};
+  const showLoader = isLoadingContent || isLoadingProducts;
 
-  if (isLoadingContent || isLoadingProducts) {
-    return <PageLoader />;
-  }
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+      {showLoader && <PageLoader />}
       {/* Background halos */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#0FD4D4]/25 blur-[120px] animate-float-slow" />

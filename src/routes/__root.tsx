@@ -98,6 +98,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://dygytel.vercel.app" },
       { property: "og:image", content: "https://dygytel.vercel.app/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Dygytel — Radiocomunicación Profesional" },
       { property: "og:locale", content: "es_CO" },
       // Twitter Card
       { name: "twitter:card", content: "summary_large_image" },
