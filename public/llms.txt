@@ -1,0 +1,20 @@
+# Dygytel — Radiocomunicación Profesional
+
+> Dygytel es una empresa líder en venta, instalación, mantenimiento y legalización de sistemas de radiocomunicación profesional (UHF, VHF, DMR, NXDN) en Colombia y América Latina. Distribuidores y especialistas en marcas como Motorola Solutions, Hytera, Kenwood e Icom.
+
+## Productos Principales
+- Radios Portátiles DMR / Analógicos (Motorola DEP-450, Hytera PD-505, Kenwood NX-1300)
+- Radios Móviles Vehiculares para patrullas y logística (Motorola MDT-5000)
+- Repetidores de Rango Extendido e Intemperie (Motorola SLR-1000, Hytera RD-985)
+- Accesorios originales: baterías Li-Ion, micrófonos de solapa, antenas de alta ganancia
+
+## Servicios de Ingeniería
+- Instalación y configuración de torres, antenas y repetidoras en sitio
+- Mantenimiento preventivo y correctivo con garantía de tiempo de actividad (99.9% Uptime)
+- Asesoría legal y trámites de licencias de espectro radioeléctrico ante autoridades (IFT/MinTIC)
+- Estudios de cobertura RF y diseño de redes críticas
+
+## Contacto & Canales Directos
+- Sitio Web: https://dygytel.vercel.app
+- Catálogo: https://dygytel.vercel.app/catalogo
+- WhatsApp de Ingeniería: https://api.whatsapp.com/send/?phone=573193053916

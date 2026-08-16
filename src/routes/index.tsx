@@ -8,7 +8,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dygytel — Radios de Telecomunicación Profesional" },
+      { title: "Inicio | Dygytel" },
       {
         name: "description",
         content:

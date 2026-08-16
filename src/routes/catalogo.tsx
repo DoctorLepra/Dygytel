@@ -31,7 +31,7 @@ import {
 export const Route = createFileRoute("/catalogo")({
   head: () => ({
     meta: [
-      { title: "Catálogo — Dygytel | Radios de Telecomunicación Profesional" },
+      { title: "Catálogo | Dygytel" },
       {
         name: "description",
         content:

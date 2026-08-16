@@ -106,6 +106,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap",
       },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Dygytel",
+          "url": "https://dygytel.vercel.app",
+          "logo": "https://dygytel.vercel.app/icono.png",
+          "description": "Venta, instalación y servicio técnico especializado en radios de telecomunicación profesional.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+57-319-305-3916",
+            "contactType": "customer service",
+            "availableLanguage": ["Spanish", "English"]
+          },
+          "sameAs": [
+            "https://api.whatsapp.com/send/?phone=573193053916"
+          ]
+        })
+      }
+    ]
   }),
   shellComponent: RootShell,
   component: RootComponent,

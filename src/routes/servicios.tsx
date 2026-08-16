@@ -6,7 +6,7 @@ import { PageLoader } from "../components/PageLoader";
 export const Route = createFileRoute("/servicios")({
   head: () => ({
     meta: [
-      { title: "Servicios de Ingeniería en Telecomunicaciones — Dygytel" },
+      { title: "Servicios | Dygytel" },
       {
         name: "description",
         content:

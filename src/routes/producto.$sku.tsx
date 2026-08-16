@@ -49,6 +49,12 @@ function ProductNotFound() {
 function ProductDetailPage({ product, allProducts }: { product: any, allProducts: any[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
+  useEffect(() => {
+    if (product?.name) {
+      document.title = `${product.name} | Dygytel`;
+    }
+  }, [product?.name]);
+
   const images = (product.images && product.images.length > 0)
     ? product.images
     : (product.image ? [product.image] : []);
@@ -65,8 +71,37 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
     .filter((p) => p.category === product.category && p.sku !== product.sku)
     .slice(0, 3);
 
+  const productSchema = useMemo(() => {
+    if (!product) return "";
+    return JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": product.name,
+      "sku": product.sku,
+      "description": product.description,
+      "image": images,
+      "brand": {
+        "@type": "Brand",
+        "name": product.brand || "Dygytel"
+      },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "COP",
+        "price": product.price ? String(product.price).replace(/[^0-9]/g, '') : "0",
+        "availability": "https://schema.org/InStock",
+        "url": `https://dygytel.vercel.app/producto/${product.sku}`
+      }
+    });
+  }, [product, images]);
+
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+      {productSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: productSchema }}
+        />
+      )}
       {/* Background halos */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#0FD4D4]/25 blur-[120px] animate-float-slow" />
