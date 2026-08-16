@@ -80,12 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dygytel — Radiocomunicación Profesional" },
+      { name: "theme-color", content: "#068DBB" },
+      { title: "Inicio | Dygytel" },
       {
         name: "description",
         content:
-          "Dygytel: venta, instalación y servicio de radios de telecomunicación profesional. Distribuidores autorizados de las marcas líderes del sector.",
+          "Tienda especializada en radios de telecomunicación profesional. Portátiles, móviles vehiculares, repetidores y servicios de ingeniería.",
       },
+      // Open Graph
+      { property: "og:site_name", content: "Dygytel" },
       { property: "og:title", content: "Dygytel — Radiocomunicación Profesional" },
       {
         property: "og:description",
@@ -93,11 +96,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Equipamiento de radio profesional para entornos exigentes. Seguridad, alcance y claridad en cada transmisión.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://dygytel.vercel.app" },
+      { property: "og:image", content: "https://dygytel.vercel.app/og-image.png" },
+      { property: "og:locale", content: "es_CO" },
+      // Twitter Card
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:site", content: "@dygytel" },
+      { name: "twitter:title", content: "Dygytel — Radiocomunicación Profesional" },
+      {
+        name: "twitter:description",
+        content:
+          "Equipamiento de radio profesional para entornos exigentes. Seguridad, alcance y claridad en cada transmisión.",
+      },
+      { name: "twitter:image", content: "https://dygytel.vercel.app/og-image.png" },
     ],
     links: [
+      { rel: "canonical", href: "https://dygytel.vercel.app" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/icono.png", type: "image/png" },
+      { rel: "icon", href: "/icono.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/Logo vertical.svg", type: "image/svg+xml" },
       { rel: "apple-touch-icon", href: "/icono.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -137,7 +156,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <HeadContent />
       </head>
