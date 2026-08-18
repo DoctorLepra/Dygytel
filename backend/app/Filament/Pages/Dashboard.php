@@ -2,9 +2,14 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Resources\Products\ProductResource;
+
 class Dashboard extends \Filament\Pages\Dashboard
 {
     protected static bool $shouldRegisterNavigation = false;
-    protected static ?string $navigationLabel = 'Dashboard';
-    protected static ?string $title = 'Dashboard';
+
+    public function mount(): void
+    {
+        redirect()->to(ProductResource::getUrl('index'));
+    }
 }

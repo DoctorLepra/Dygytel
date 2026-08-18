@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { PageLoader } from "../components/PageLoader";
 import productHandheld from "../assets/product-handheld.jpg";
 import productMobile from "../assets/product-mobile.jpg";
 import productRepeater from "../assets/product-repeater.jpg";
@@ -57,14 +58,24 @@ function CatalogoPage() {
   const { data: fetchedCategories = [] } = useCategories();
   const { data: fetchedBrands = [] } = useBrands();
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
   const [active, setActive] = useState<string>("Todos");
   const [activeBrand, setActiveBrand] = useState<string>("Todas");
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(true);
+
+  // Manage body scroll lock when filter sidebar is open
+  useEffect(() => {
+    if (isFilterOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isFilterOpen]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -90,15 +101,15 @@ function CatalogoPage() {
       const q = query.trim().toLowerCase();
       const okQ =
         !q ||
-        p.name.toLowerCase().includes(q) ||
-        p.sku.toLowerCase().includes(q) ||
-        p.brand.toLowerCase().includes(q);
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.sku && p.sku.toLowerCase().includes(q)) ||
+        (p.brand && p.brand.toLowerCase().includes(q));
       return okCat && okBrand && okQ;
     });
-  }, [active, activeBrand, query]);
+  }, [products, active, activeBrand, query]);
 
   // Reset page when filters change
-  useMemo(() => {
+  useEffect(() => {
     setCurrentPage(1);
   }, [active, activeBrand, query]);
 
@@ -111,16 +122,15 @@ function CatalogoPage() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+      {isLoading && <PageLoader />}
       {/* Background halos */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#0FD4D4]/25 blur-[120px] animate-float-slow" />
         <div className="absolute top-[30%] -right-40 h-[600px] w-[600px] rounded-full bg-[#068DBB]/20 blur-[140px] animate-float-slow" style={{ animationDelay: "3s" }} />
       </div>
 
-
-
       {/* Hero */}
-      <section className="relative overflow-hidden pt-36 pb-14">
+      <section className="relative overflow-hidden pt-36 pb-10">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 -z-10 opacity-[0.3]"
@@ -137,16 +147,16 @@ function CatalogoPage() {
             <span className="text-foreground/30">/</span>
             <span className="text-foreground/70">Catálogo</span>
           </div>
-          <h1 className="mt-4 text-3xl sm:text-5xl font-extrabold leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl">
+          <h1 className="mt-4 text-[2.35rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[0.98] sm:leading-[0.95] tracking-[-0.03em]">
             Catálogo <span className="text-gradient-brand">completo</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
+          <p className="mt-3.5 sm:mt-5 max-w-2xl text-[17px] sm:text-lg text-muted-foreground leading-relaxed">
             Explora nuestra selección de radios portátiles, móviles vehiculares, repetidores y accesorios de las marcas líderes del sector.
           </p>
 
-          {/* Search + filters */}
-          <div className="mt-10 flex flex-col gap-5">
-            <div className="flex w-full flex-col sm:flex-row items-center gap-3 md:max-w-2xl">
+          {/* Desktop & Tablet Filters (Search Bar + Brands Dropdown + Horizontal Carousel) */}
+          <div className="mt-10 hidden md:flex flex-col gap-5">
+            <div className="flex w-full flex-row items-center gap-3 max-w-2xl">
               <div className="glass flex w-full flex-1 items-center gap-3 rounded-full px-5 py-3">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#068DBB]">
                   <circle cx="11" cy="11" r="8" />
@@ -162,7 +172,7 @@ function CatalogoPage() {
               </div>
               
               <DropdownMenu>
-                <DropdownMenuTrigger className="bg-gradient-brand text-white shadow-glow flex w-full sm:w-auto items-center justify-between gap-2 rounded-full px-6 py-3 font-bold text-sm hover:brightness-110 transition-all whitespace-nowrap outline-none border-none">
+                <DropdownMenuTrigger className="bg-gradient-brand text-white shadow-glow flex items-center justify-between gap-2 rounded-full px-6 py-3 font-bold text-sm hover:brightness-110 transition-all whitespace-nowrap outline-none border-none">
                   {activeBrand === "Todas" ? "Marcas" : activeBrand}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
                 </DropdownMenuTrigger>
@@ -211,8 +221,213 @@ function CatalogoPage() {
               <CarouselNext className="right-0 glass hover:bg-gradient-brand hover:text-white" />
             </Carousel>
           </div>
+
+          {/* Mobile-Only Trigger Button "Filtros" + Active Summary Pills */}
+          <div className="mt-8 flex md:hidden flex-wrap items-center gap-4">
+            <button
+              onClick={() => setIsFilterOpen(true)}
+              className="bg-gradient-brand ptt-button flex items-center gap-3 rounded-full px-7 py-3.5 text-sm font-bold text-white shadow-glow hover:brightness-110 active:scale-95 transition-all"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              <span>Filtros</span>
+              {(query || active !== "Todos" || activeBrand !== "Todas") && (
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#068DBB] text-xs font-black shadow">
+                  !
+                </span>
+              )}
+            </button>
+
+            {/* Active Filters Summary Pills */}
+            <div className="flex flex-wrap items-center gap-2">
+              {query && (
+                <span className="glass flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium text-foreground border border-border/60">
+                  Búsqueda: <strong>"{query}"</strong>
+                  <button onClick={() => setQuery("")} className="hover:text-red-500 font-bold ml-1">✕</button>
+                </span>
+              )}
+              {activeBrand !== "Todas" && (
+                <span className="glass flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium text-[#068DBB] border border-[#068DBB]/30">
+                  Marca: <strong>{activeBrand}</strong>
+                  <button onClick={() => setActiveBrand("Todas")} className="hover:text-red-500 font-bold ml-1">✕</button>
+                </span>
+              )}
+              {active !== "Todos" && (
+                <span className="glass flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-medium text-[#068DBB] border border-[#068DBB]/30">
+                  Categoría: <strong>{active}</strong>
+                  <button onClick={() => setActive("Todos")} className="hover:text-red-500 font-bold ml-1">✕</button>
+                </span>
+              )}
+              {(query || active !== "Todos" || activeBrand !== "Todas") && (
+                <button
+                  onClick={() => {
+                    setQuery("");
+                    setActive("Todos");
+                    setActiveBrand("Todas");
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground underline ml-2 font-medium"
+                >
+                  Limpiar todo
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* Full-Screen Left-to-Right Sidebar Filter Drawer (MOBILE ONLY) */}
+      <div
+        className={`fixed inset-0 z-[100] flex flex-col bg-background/95 backdrop-blur-3xl transition-transform duration-300 ease-in-out md:hidden ${
+          isFilterOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
+        }`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex h-20 items-center justify-between px-6 pt-2 border-b border-border/40">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#068DBB]/15 text-[#068DBB]">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold">Filtros de Búsqueda</h2>
+              <p className="text-xs text-muted-foreground">Encuentra radios y accesorios rápidamente</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsFilterOpen(false)}
+            aria-label="Cerrar filtros"
+            className="flex h-11 w-11 items-center justify-center rounded-2xl glass text-foreground hover:text-[#068DBB] transition-colors"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Sidebar Content */}
+        <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8">
+          {/* 1. Search Bar */}
+          <div className="space-y-2">
+            <label className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+              Buscar por Palabra Clave
+            </label>
+            <div className="glass flex w-full items-center gap-3 rounded-2xl px-5 py-3.5 border border-border/60">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#068DBB]">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar por modelo, SKU o marca…"
+                className="flex-1 bg-transparent text-base placeholder:text-muted-foreground focus:outline-none"
+              />
+              {query && (
+                <button onClick={() => setQuery("")} className="text-muted-foreground hover:text-foreground">
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* 2. Brands Dropdown */}
+          <div className="space-y-2">
+            <label className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+              Filtrar por Marca
+            </label>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="bg-gradient-brand text-white shadow-glow flex w-full items-center justify-between gap-2 rounded-2xl px-6 py-4 font-bold text-base hover:brightness-110 transition-all outline-none border-none">
+                <span>{activeBrand === "Todas" ? "Todas las Marcas" : `Marca: ${activeBrand}`}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m6 9 6 6 6-6"/></svg>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="glass-strong border-border/50 bg-background/95 backdrop-blur-2xl rounded-2xl p-2 w-[calc(100vw-3rem)] max-w-lg z-[110]">
+                {uniqueBrands.map(brand => (
+                  <DropdownMenuItem
+                    key={brand}
+                    onClick={() => setActiveBrand(brand)}
+                    className={`cursor-pointer rounded-xl px-4 py-3 text-base hover:bg-foreground/5 ${activeBrand === brand ? "text-[#068DBB] font-bold bg-[#068DBB]/10" : ""}`}
+                  >
+                    {brand === "Todas" ? "Todas las marcas" : brand}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* 3. Collapsible Categories Menu */}
+          <div className="space-y-3 pt-2 border-t border-border/40">
+            <button
+              onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+              className="flex w-full items-center justify-between text-left py-2"
+            >
+              <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+                Categorías de Producto ({categories.length - 1})
+              </span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                className={`transition-transform duration-200 ${isCategoryOpen ? "rotate-180 text-[#068DBB]" : "text-muted-foreground"}`}
+              >
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+
+            {isCategoryOpen && (
+              <div className="space-y-2 pt-1 animate-fade-in">
+                {categories.map((c) => {
+                  const isActive = active === c;
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setActive(c)}
+                      className={`flex w-full items-center justify-between rounded-2xl px-5 py-3.5 text-base font-bold transition-all ${
+                        isActive
+                          ? "bg-[#068DBB]/15 text-[#068DBB] border border-[#068DBB]/30 shadow-inner"
+                          : "glass text-foreground/80 hover:bg-foreground/5 hover:text-foreground"
+                      }`}
+                    >
+                      <span>{c}</span>
+                      {isActive ? (
+                        <span className="h-2.5 w-2.5 rounded-full bg-[#068DBB] shadow-[0_0_10px_#068DBB]" />
+                      ) : (
+                        <span className="text-muted-foreground text-sm">→</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="p-6 border-t border-border/40 bg-background/80 backdrop-blur-lg flex gap-3">
+          <button
+            onClick={() => {
+              setQuery("");
+              setActive("Todos");
+              setActiveBrand("Todas");
+            }}
+            className="glass px-5 py-4 rounded-2xl font-mono text-xs uppercase tracking-widest font-bold text-foreground/70 hover:text-foreground active:scale-95"
+          >
+            Limpiar
+          </button>
+          <button
+            onClick={() => setIsFilterOpen(false)}
+            className="flex-1 bg-gradient-brand ptt-button flex items-center justify-center gap-2 rounded-2xl py-4 font-semibold text-white shadow-glow hover:brightness-110 active:scale-95 text-center text-base"
+          >
+            Ver {filtered.length} Resultados
+          </button>
+        </div>
+      </div>
 
       {/* Grid */}
       <section className="mx-auto max-w-7xl px-6 pb-24">

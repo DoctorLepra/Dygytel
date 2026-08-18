@@ -172,18 +172,16 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const location = useLocation();
-  const isAdminLogin = location.pathname === "/admin/login";
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        {!isAdminLogin && <Navbar />}
+        <Navbar />
         <div className="flex-1">
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </div>
-        {!isAdminLogin && <Footer />}
+        <Footer />
       </div>
     </QueryClientProvider>
   );

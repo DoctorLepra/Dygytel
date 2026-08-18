@@ -21,6 +21,7 @@ class WebContentResource extends Resource
     protected static ?string $modelLabel = 'Sección Web';
     protected static ?string $pluralModelLabel = 'Secciones Web';
     protected static ?string $navigationLabel = 'Secciones CMS';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?int $navigationSort = 2;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-computer-desktop';

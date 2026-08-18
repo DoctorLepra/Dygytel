@@ -14,7 +14,6 @@ import { Route as CatalogoRouteImport } from './routes/catalogo'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as NosotrosRouteImport } from './routes/nosotros'
 import { Route as ServiciosRouteImport } from './routes/servicios'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as ProductoSkuRouteImport } from './routes/producto.$sku'
 
 const IndexRoute = IndexRouteImport.update({
@@ -42,11 +41,6 @@ const ServiciosRoute = ServiciosRouteImport.update({
   path: '/servicios',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminLoginRoute = AdminLoginRouteImport.update({
-  id: '/admin/login',
-  path: '/admin/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProductoSkuRoute = ProductoSkuRouteImport.update({
   id: '/producto/$sku',
   path: '/producto/$sku',
@@ -59,7 +53,6 @@ export interface FileRoutesByFullPath {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/servicios': typeof ServiciosRoute
-  '/admin/login': typeof AdminLoginRoute
   '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesByTo {
@@ -68,7 +61,6 @@ export interface FileRoutesByTo {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/servicios': typeof ServiciosRoute
-  '/admin/login': typeof AdminLoginRoute
   '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRoutesById {
@@ -78,7 +70,6 @@ export interface FileRoutesById {
   '/contacto': typeof ContactoRoute
   '/nosotros': typeof NosotrosRoute
   '/servicios': typeof ServiciosRoute
-  '/admin/login': typeof AdminLoginRoute
   '/producto/$sku': typeof ProductoSkuRoute
 }
 export interface FileRouteTypes {
@@ -89,7 +80,6 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/servicios'
-    | '/admin/login'
     | '/producto/$sku'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -98,7 +88,6 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/servicios'
-    | '/admin/login'
     | '/producto/$sku'
   id:
     | '__root__'
@@ -107,7 +96,6 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/nosotros'
     | '/servicios'
-    | '/admin/login'
     | '/producto/$sku'
   fileRoutesById: FileRoutesById
 }
@@ -117,7 +105,6 @@ export interface RootRouteChildren {
   ContactoRoute: typeof ContactoRoute
   NosotrosRoute: typeof NosotrosRoute
   ServiciosRoute: typeof ServiciosRoute
-  AdminLoginRoute: typeof AdminLoginRoute
   ProductoSkuRoute: typeof ProductoSkuRoute
 }
 
@@ -158,13 +145,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServiciosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/login': {
-      id: '/admin/login'
-      path: '/admin/login'
-      fullPath: '/admin/login'
-      preLoaderRoute: typeof AdminLoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/producto/$sku': {
       id: '/producto/$sku'
       path: '/producto/$sku'
@@ -181,7 +161,6 @@ const rootRouteChildren: RootRouteChildren = {
   ContactoRoute: ContactoRoute,
   NosotrosRoute: NosotrosRoute,
   ServiciosRoute: ServiciosRoute,
-  AdminLoginRoute: AdminLoginRoute,
   ProductoSkuRoute: ProductoSkuRoute,
 }
 export const routeTree = rootRouteImport

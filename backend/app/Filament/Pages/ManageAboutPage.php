@@ -18,9 +18,24 @@ use Filament\Schemas\Schema;
 
 class ManageAboutPage extends Page
 {
+    protected static \UnitEnum|string|null $navigationGroup = 'Secciones CMS';
     protected static ?string $navigationLabel = 'Vista Nosotros';
-    protected static ?string $title = 'CMS — Gestión de Vista Nosotros';
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $title = 'Vista Nosotros';
+
+    public function getHeading(): string
+    {
+        return '';
+    }
+
+    /**
+     * Authorization: Accessible by Administrators and Editors.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() || auth()->user()?->isEditor();
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = null;
     protected static ?int $navigationSort = 3;
 
     protected string $view = 'filament.pages.manage-about-page';
@@ -49,7 +64,7 @@ class ManageAboutPage extends Page
             ->components([
                 Tabs::make('AboutSections')
                     ->tabs([
-                        Tab::make('Hero Section & Cifras')
+                        Tab::make('Hero Section')
                             ->icon('heroicon-o-rocket-launch')
                             ->schema([
                                 Grid::make(2)
@@ -94,7 +109,7 @@ class ManageAboutPage extends Page
                                     ]),
                             ]),
 
-                        Tab::make('Historia & Certificaciones')
+                        Tab::make('Historia y Certificaciones')
                             ->icon('heroicon-o-document-text')
                             ->schema([
                                 TextInput::make('story_label')

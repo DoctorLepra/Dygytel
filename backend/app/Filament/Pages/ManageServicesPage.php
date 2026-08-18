@@ -19,9 +19,24 @@ use Filament\Schemas\Schema;
 
 class ManageServicesPage extends Page
 {
+    protected static \UnitEnum|string|null $navigationGroup = 'Secciones CMS';
     protected static ?string $navigationLabel = 'Vista Servicios';
-    protected static ?string $title = 'CMS — Gestión de Vista Servicios';
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-wrench-screwdriver';
+    protected static ?string $title = 'Vista Servicios';
+
+    public function getHeading(): string
+    {
+        return '';
+    }
+
+    /**
+     * Authorization: Accessible by Administrators and Editors.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() || auth()->user()?->isEditor();
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = null;
     protected static ?int $navigationSort = 2;
 
     protected string $view = 'filament.pages.manage-services-page';
@@ -183,7 +198,7 @@ class ManageServicesPage extends Page
                                     ->columnSpanFull(),
                             ]),
 
-                        Tab::make('Cotización & WhatsApp')
+                        Tab::make('Cotización y WhatsApp')
                             ->icon('heroicon-o-chat-bubble-left-right')
                             ->schema([
                                 Grid::make(2)

@@ -60,10 +60,23 @@ const resolveImages = (img: any): string[] => {
   return [];
 };
 
+const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeoutMs = 2500): Promise<Response> => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(id);
+    return response;
+  } catch (err) {
+    clearTimeout(id);
+    throw err;
+  }
+};
+
 // Fetch all products with safe fallback
 export const fetchProducts = async (): Promise<Product[]> => {
   try {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetchWithTimeout(`${API_URL}/products`);
     if (!response.ok) return staticProducts;
     const data = await response.json();
     if (!Array.isArray(data) || data.length === 0) return staticProducts;
@@ -95,7 +108,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
 // Fetch single product by SKU with safe fallback
 export const fetchProductBySku = async (sku: string): Promise<Product> => {
   try {
-    const response = await fetch(`${API_URL}/products/${sku}`);
+    const response = await fetchWithTimeout(`${API_URL}/products/${sku}`);
     if (!response.ok) {
       const local = staticProducts.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
       if (local) return local;
@@ -120,6 +133,7 @@ export const fetchProductBySku = async (sku: string): Promise<Product> => {
       specs: parseSpecs(item.specs),
     };
   } catch (error) {
+    console.warn("API ProductBySku unreachable, using static fallback:", error);
     const local = staticProducts.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
     if (local) return local;
     throw error;
@@ -129,10 +143,13 @@ export const fetchProductBySku = async (sku: string): Promise<Product> => {
 // Fetch categories with safe fallback
 export const fetchCategories = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_URL}/categories`);
+    const response = await fetchWithTimeout(`${API_URL}/categories`);
     if (!response.ok) return [];
-    return await response.json();
-  } catch {
+    const data = await response.json();
+    if (!Array.isArray(data)) return [];
+    return data.map((c: any) => typeof c === 'string' ? c : c.name).filter(Boolean);
+  } catch (error) {
+    console.warn("API Categories unreachable:", error);
     return [];
   }
 };
@@ -140,10 +157,13 @@ export const fetchCategories = async (): Promise<string[]> => {
 // Fetch brands with safe fallback
 export const fetchBrands = async (): Promise<string[]> => {
   try {
-    const response = await fetch(`${API_URL}/brands`);
+    const response = await fetchWithTimeout(`${API_URL}/brands`);
     if (!response.ok) return [];
-    return await response.json();
-  } catch {
+    const data = await response.json();
+    if (!Array.isArray(data)) return [];
+    return data.map((b: any) => typeof b === 'string' ? b : b.name).filter(Boolean);
+  } catch (error) {
+    console.warn("API Brands unreachable:", error);
     return [];
   }
 };
@@ -151,7 +171,7 @@ export const fetchBrands = async (): Promise<string[]> => {
 // Fetch web content with safe fallback
 export const fetchWebContent = async (): Promise<Record<string, Record<string, string>>> => {
   try {
-    const response = await fetch(`${API_URL}/content`);
+    const response = await fetchWithTimeout(`${API_URL}/content`);
     if (!response.ok) return {};
     return await response.json();
   } catch (error) {

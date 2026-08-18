@@ -65,10 +65,10 @@ function Landing() {
 
 
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section
         id="inicio"
-        className="relative isolate overflow-hidden pt-28 pb-24 lg:pt-32 lg:pb-32"
+        className="relative isolate overflow-hidden pt-24 pb-16 min-h-[calc(100vh-4rem)] flex flex-col justify-center lg:pt-32 lg:pb-32"
       >
         {/* Grid backdrop */}
         <div
@@ -93,11 +93,9 @@ function Landing() {
         />
 
         <div className="relative mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-12">
-            <div className="animate-fade-in-up space-y-10 lg:col-span-7">
-
-
-              <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-[6.5rem] font-extrabold leading-[0.95] tracking-[-0.03em] text-balance">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-16">
+            <div className="animate-fade-in-up space-y-5 sm:space-y-8 lg:col-span-7">
+              <h1 className="text-[3.2rem] xs:text-[3.8rem] sm:text-[4.2rem] md:text-7xl lg:text-[6.5rem] font-extrabold leading-[1.0] md:leading-[0.95] tracking-[-0.03em] text-balance">
                 {homeContent.hero_title || 'Comunicación crítica sin'}{" "}
                 <span className="relative inline-block">
                   <span className="text-gradient-brand">
@@ -107,11 +105,11 @@ function Landing() {
                 </span>
               </h1>
 
-              <p className="max-w-[52ch] text-base sm:text-lg text-muted-foreground text-pretty md:text-xl">
+              <p className="max-w-[52ch] text-lg sm:text-xl text-muted-foreground text-pretty md:text-xl leading-snug">
                 {homeContent.hero_description || 'Tu tienda especializada en radios de telecomunicación profesional. Equipos, accesorios y servicio técnico para operaciones donde la conexión no puede fallar.'}
               </p>
 
-              <div className="flex flex-col sm:flex-row flex-wrap gap-4">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                 <Link
                   to="/catalogo"
                   className="bg-gradient-brand ptt-button group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full px-9 py-4 sm:py-5 text-xs sm:text-sm font-bold uppercase tracking-widest text-white shadow-glow hover:brightness-110 active:scale-95 text-center"
@@ -132,35 +130,35 @@ function Landing() {
                 </a>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 pt-6 border-t border-border/50">
+              <div className="grid grid-cols-3 gap-2 xs:gap-4 sm:gap-6 pt-6 border-t border-border/50">
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-gradient-brand">
+                  <div className="text-xl xs:text-2xl sm:text-3xl font-extrabold text-gradient-brand">
                     {homeContent.metric_1_val || '15+'}
                   </div>
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  <div className="font-mono text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
                     {homeContent.metric_1_label || 'Años de experiencia'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-gradient-brand">
+                  <div className="text-xl xs:text-2xl sm:text-3xl font-extrabold text-gradient-brand">
                     {homeContent.metric_2_val || '99.9%'}
                   </div>
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  <div className="font-mono text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
                     {homeContent.metric_2_label || 'Uptime garantizado'}
                   </div>
                 </div>
-                <div className="col-span-2 sm:col-span-1">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-gradient-brand">
+                <div>
+                  <div className="text-xl xs:text-2xl sm:text-3xl font-extrabold text-gradient-brand">
                     {homeContent.metric_3_val || '24/7'}
                   </div>
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
+                  <div className="font-mono text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
                     {homeContent.metric_3_label || 'Soporte técnico'}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="relative lg:col-span-5">
+            <div className="hidden md:block relative lg:col-span-5">
               {/* Concentric signal rings behind the device */}
               <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
                 <div className="absolute h-[110%] w-[110%] rounded-full border border-[#068DBB]/15" />

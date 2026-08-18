@@ -114,10 +114,6 @@ function NosotrosPage() {
   const { data: webContent, isLoading } = useWebContent();
   const aboutContent = webContent?.about || {};
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
   const certsList = useMemo(() => {
     if (Array.isArray(aboutContent.certifications) && aboutContent.certifications.length > 0) {
       return aboutContent.certifications;
@@ -138,6 +134,7 @@ function NosotrosPage() {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
+      {isLoading && <PageLoader />}
       {/* Background halos */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-[#0FD4D4]/25 blur-[120px] animate-float-slow" />
@@ -174,14 +171,14 @@ function NosotrosPage() {
 
           <div className="mt-6 grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
             <div className="lg:col-span-7">
-              <h1 className="text-3xl sm:text-5xl font-extrabold leading-[0.95] tracking-[-0.03em] md:text-6xl lg:text-7xl">
+              <h1 className="text-[2.35rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[0.98] sm:leading-[0.95] tracking-[-0.03em]">
                 {aboutContent.hero_title || 'La voz detrás de las'}{" "}
                 <br className="hidden sm:inline" />
                 <span className="text-gradient-brand">
                   {aboutContent.hero_title_highlight || 'operaciones críticas.'}
                 </span>
               </h1>
-              <p className="mt-6 max-w-2xl text-base sm:text-lg text-muted-foreground">
+              <p className="mt-4 sm:mt-6 max-w-2xl text-[15px] sm:text-lg text-muted-foreground leading-relaxed">
                 {aboutContent.hero_description ||
                   'En Dygytel unimos tecnología de vanguardia, ingeniería de precisión y compromiso humano para garantizar comunicaciones ininterrumpidas en los entornos más desafiantes de Colombia.'}
               </p>

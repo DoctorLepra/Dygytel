@@ -17,9 +17,24 @@ use Filament\Schemas\Schema;
 
 class ManageContactPage extends Page
 {
+    protected static \UnitEnum|string|null $navigationGroup = 'Secciones CMS';
     protected static ?string $navigationLabel = 'Vista Contacto';
-    protected static ?string $title = 'CMS — Gestión de Vista Contacto';
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-phone';
+    protected static ?string $title = 'Vista Contacto';
+
+    public function getHeading(): string
+    {
+        return '';
+    }
+
+    /**
+     * Authorization: Accessible by Administrators and Editors.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() || auth()->user()?->isEditor();
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = null;
     protected static ?int $navigationSort = 4;
 
     protected string $view = 'filament.pages.manage-contact-page';

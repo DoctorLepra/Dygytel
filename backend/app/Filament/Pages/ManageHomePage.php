@@ -19,9 +19,24 @@ use BackedEnum;
 
 class ManageHomePage extends Page
 {
+    protected static \UnitEnum|string|null $navigationGroup = 'Secciones CMS';
     protected static ?string $navigationLabel = 'Vista Inicio';
-    protected static ?string $title = 'CMS — Gestión de Vista Inicio';
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-computer-desktop';
+    protected static ?string $title = 'Vista Inicio';
+
+    public function getHeading(): string
+    {
+        return '';
+    }
+
+    /**
+     * Authorization: Accessible by Administrators and Editors.
+     */
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->isAdmin() || auth()->user()?->isEditor();
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = null;
     protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament.pages.manage-home-page';
@@ -180,7 +195,7 @@ class ManageHomePage extends Page
                                     ->columnSpanFull(),
                             ]),
 
-                        Tab::make('Contacto & Ubicación')
+                        Tab::make('Contacto y Ubicación')
                             ->icon('heroicon-o-phone')
                             ->schema([
                                 TextInput::make('contact_title')

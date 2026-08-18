@@ -21,10 +21,19 @@ class ProductResource extends Resource
     protected static ?string $modelLabel = 'Producto';
     protected static ?string $pluralModelLabel = 'Productos';
     protected static ?string $navigationLabel = 'Productos';
+    protected static ?int $navigationSort = 1;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-archive-box';
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    /**
+     * Strict Authorization: Only Administrators can view and manage products.
+     */
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->isAdmin() ?? false;
+    }
 
     public static function form(Schema $schema): Schema
     {
