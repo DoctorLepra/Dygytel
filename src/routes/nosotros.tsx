@@ -284,9 +284,12 @@ function NosotrosPage() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-8">
           {valuesList.map((v: any, i: number) => (
-            <div key={i} className="glass group relative rounded-3xl p-8 transition-all hover:-translate-y-1 hover:shadow-glow">
+            <div
+              key={i}
+              className="glass group relative rounded-3xl p-8 transition-all hover:-translate-y-1 hover:shadow-glow w-full sm:w-[calc(50%-1.5rem)] lg:w-[calc(25%-1.5rem)] min-w-[270px] max-w-[340px] flex flex-col justify-start"
+            >
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-foreground/5 dark:bg-white/5 mb-6">
                 {renderValueIcon(v.iconKey)}
               </div>

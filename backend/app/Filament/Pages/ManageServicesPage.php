@@ -37,7 +37,7 @@ class ManageServicesPage extends Page
     }
 
     protected static string|BackedEnum|null $navigationIcon = null;
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
     protected string $view = 'filament.pages.manage-services-page';
 
@@ -72,12 +72,10 @@ class ManageServicesPage extends Page
                                     ->schema([
                                         TextInput::make('hero_title')
                                             ->label('Título Principal del Hero')
-                                            ->placeholder('Ej: Soluciones de')
-                                            ->required(),
+                                            ->placeholder('Ej: Soluciones de'),
                                         TextInput::make('hero_title_highlight')
                                             ->label('Texto Destacado (Gradiente Azul/Cian)')
-                                            ->placeholder('Ej: comunicación crítica.')
-                                            ->required(),
+                                            ->placeholder('Ej: comunicación crítica.'),
                                     ]),
                                 Textarea::make('hero_description')
                                     ->label('Descripción del Hero')
@@ -86,14 +84,11 @@ class ManageServicesPage extends Page
                                 Grid::make(3)
                                     ->schema([
                                         TextInput::make('hero_btn1_text')
-                                            ->label('Texto Botón 1 (Explorar)')
-                                            ->required(),
+                                            ->label('Texto Botón 1 (Explorar)'),
                                         TextInput::make('hero_btn2_text')
-                                            ->label('Texto Botón 2 (Diagnóstico)')
-                                            ->required(),
+                                            ->label('Texto Botón 2 (Diagnóstico)'),
                                         TextInput::make('hero_btn2_link')
-                                            ->label('Enlace Botón 2')
-                                            ->required(),
+                                            ->label('Enlace Botón 2'),
                                     ]),
                                 Section::make('Métricas del Hero (4 Tarjetas)')
                                     ->schema([
@@ -127,7 +122,6 @@ class ManageServicesPage extends Page
                             ->schema([
                                 TextInput::make('services_catalog_title')
                                     ->label('Título de la Sección Catálogo')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Textarea::make('services_catalog_desc')
                                     ->label('Descripción de la Sección Catálogo')
@@ -154,11 +148,9 @@ class ManageServicesPage extends Page
                                         Grid::make(3)
                                             ->schema([
                                                 TextInput::make('num')
-                                                    ->label('Número (ej: 01)')
-                                                    ->required(),
+                                                    ->label('Número (ej: 01)'),
                                                 TextInput::make('title')
                                                     ->label('Título del Servicio')
-                                                    ->required()
                                                     ->columnSpan(2),
                                             ]),
                                         Select::make('icon')
@@ -175,23 +167,19 @@ class ManageServicesPage extends Page
                                                 'battery' => '🔋 Batería / Energía / Autonomía',
                                                 'signal' => '📶 Señal / Frecuencia / Cobertura Mobile',
                                             ])
-                                            ->default('tower')
-                                            ->required(),
+                                            ->default('tower'),
                                         Textarea::make('shortDesc')
                                             ->label('Descripción Corta (Para Tarjeta)')
-                                            ->rows(2)
-                                            ->required(),
+                                            ->rows(2),
                                         Textarea::make('longDesc')
                                             ->label('Descripción Detallada (Para Visor Interactivo)')
-                                            ->rows(3)
-                                            ->required(),
+                                            ->rows(3),
                                         Repeater::make('details')
                                             ->label('Entregables y Alcances Técnicos (Máximo 4)')
                                             ->maxItems(4)
                                             ->schema([
                                                 TextInput::make('item')
-                                                    ->label('Entregable / Alcance Técnico')
-                                                    ->required(),
+                                                    ->label('Entregable / Alcance Técnico'),
                                             ])
                                             ->columnSpanFull(),
                                     ])
@@ -204,18 +192,14 @@ class ManageServicesPage extends Page
                                 Grid::make(2)
                                     ->schema([
                                         TextInput::make('quote_btn_text')
-                                            ->label('Texto Botón Cotización')
-                                            ->required(),
+                                            ->label('Texto Botón Cotización'),
                                         TextInput::make('quote_btn_link')
-                                            ->label('Enlace Botón Cotización')
-                                            ->required(),
+                                            ->label('Enlace Botón Cotización'),
 
                                         TextInput::make('wa_btn_text')
-                                            ->label('Texto Botón WhatsApp')
-                                            ->required(),
+                                            ->label('Texto Botón WhatsApp'),
                                         TextInput::make('wa_btn_link')
-                                            ->label('Enlace Botón WhatsApp')
-                                            ->required(),
+                                            ->label('Enlace Botón WhatsApp'),
                                     ]),
                             ]),
 
@@ -224,7 +208,6 @@ class ManageServicesPage extends Page
                             ->schema([
                                 TextInput::make('faqs_title')
                                     ->label('Título de la Sección FAQ')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Repeater::make('faqs')
                                     ->label('Preguntas Frecuentes (Máximo 4)')
@@ -234,12 +217,10 @@ class ManageServicesPage extends Page
                                     ->collapsed()
                                     ->schema([
                                         TextInput::make('q')
-                                            ->label('Pregunta')
-                                            ->required(),
+                                            ->label('Pregunta'),
                                         Textarea::make('a')
                                             ->label('Respuesta')
-                                            ->rows(3)
-                                            ->required(),
+                                            ->rows(3),
                                     ])
                                     ->columnSpanFull(),
                             ]),
@@ -252,7 +233,6 @@ class ManageServicesPage extends Page
                                     ->columnSpanFull(),
                                 TextInput::make('cta_title')
                                     ->label('Título del Banner')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Textarea::make('cta_desc')
                                     ->label('Descripción del Banner')
@@ -261,11 +241,9 @@ class ManageServicesPage extends Page
                                 Grid::make(2)
                                     ->schema([
                                         TextInput::make('cta_btn_text')
-                                            ->label('Texto del Botón')
-                                            ->required(),
+                                            ->label('Texto del Botón'),
                                         TextInput::make('cta_btn_link')
-                                            ->label('Enlace del Botón')
-                                            ->required(),
+                                            ->label('Enlace del Botón'),
                                     ]),
                             ]),
                     ])

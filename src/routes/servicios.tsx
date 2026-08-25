@@ -221,8 +221,9 @@ function ServiciosPage() {
   const servicesContent = webContent?.services || {};
 
   const servicesList = useMemo(() => {
-    if (Array.isArray(servicesContent.services_list) && servicesContent.services_list.length > 0) {
-      return servicesContent.services_list.map((s: any, idx: number) => ({
+    const rawServices = (servicesContent as any).services_list;
+    if (Array.isArray(rawServices) && rawServices.length > 0) {
+      return rawServices.map((s: any, idx: number) => ({
         id: s.id || `service-${idx}`,
         num: s.num || (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
         title: s.title || '',
@@ -236,19 +237,20 @@ function ServiciosPage() {
       }));
     }
     return defaultServicesList.map((s, idx) => ({ ...s, isFeatured: idx === 0 }));
-  }, [servicesContent.services_list]);
+  }, [(servicesContent as any).services_list]);
 
   const defaultFeaturedId = useMemo(() => {
     const featured = servicesList.find((s: any) => s.isFeatured);
     return featured?.id || servicesList[0]?.id || "instalacion";
   }, [servicesList]);
 
-  const faqsList = useMemo(() => {
-    if (Array.isArray(servicesContent.faqs) && servicesContent.faqs.length > 0) {
-      return servicesContent.faqs.slice(0, 4);
+  const faqsList = useMemo<Array<{ q: string; a: string }>>(() => {
+    const rawFaqs = (servicesContent as any).faqs;
+    if (Array.isArray(rawFaqs) && rawFaqs.length > 0) {
+      return rawFaqs.slice(0, 4);
     }
     return defaultFaqs;
-  }, [servicesContent.faqs]);
+  }, [(servicesContent as any).faqs]);
 
   const [selectedService, setSelectedService] = useState<string>(defaultFeaturedId);
   const [openFaq, setOpenFaq] = useState<number | null>(0);

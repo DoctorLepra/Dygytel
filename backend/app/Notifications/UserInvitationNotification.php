@@ -44,12 +44,11 @@ class UserInvitationNotification extends Notification
 
         return (new MailMessage)
             ->subject('Invitación al Panel de Administración — Dygytel')
-            ->greeting('¡Hola ' . $notifiable->name . '!')
-            ->line('Has sido invitado a formar parte del panel administrativo del sistema Dygytel CMS.')
-            ->line('Para completar la activación de tu cuenta y crear tu contraseña de acceso, por favor haz clic en el siguiente botón:')
-            ->action('Asignar mi Contraseña', $url)
-            ->line('Este enlace de invitación vencerá en 48 horas.')
-            ->line('Si no esperabas esta invitación, puedes ignorar este mensaje.');
+            ->view('emails.user-invitation', [
+                'user' => $notifiable,
+                'url' => $url,
+                'expireHours' => 48,
+            ]);
     }
 
     /**

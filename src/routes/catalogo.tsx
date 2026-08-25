@@ -5,7 +5,7 @@ import productHandheld from "../assets/product-handheld.jpg";
 import productMobile from "../assets/product-mobile.jpg";
 import productRepeater from "../assets/product-repeater.jpg";
 import { ThemeToggle } from "../components/ThemeToggle";
-import { useProducts, useCategories, useBrands } from "../lib/api";
+import { useProducts, useCategories, useBrands, useWebContent } from "../lib/api";
 import { type Category } from "../lib/products";
 import {
   Carousel,
@@ -57,6 +57,8 @@ function CatalogoPage() {
   const { data: products = [], isLoading, error } = useProducts();
   const { data: fetchedCategories = [] } = useCategories();
   const { data: fetchedBrands = [] } = useBrands();
+  const { data: webContent } = useWebContent();
+  const catalogContent = webContent?.catalog;
 
   const [active, setActive] = useState<string>("Todos");
   const [activeBrand, setActiveBrand] = useState<string>("Todas");
@@ -148,10 +150,14 @@ function CatalogoPage() {
             <span className="text-foreground/70">Catálogo</span>
           </div>
           <h1 className="mt-4 text-[2.35rem] xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[0.98] sm:leading-[0.95] tracking-[-0.03em]">
-            Catálogo <span className="text-gradient-brand">completo</span>
+            {catalogContent?.hero_title || "Catálogo"}{" "}
+            <span className="text-gradient-brand">
+              {catalogContent?.hero_title_highlight || "completo"}
+            </span>
           </h1>
           <p className="mt-3.5 sm:mt-5 max-w-2xl text-[17px] sm:text-lg text-muted-foreground leading-relaxed">
-            Explora nuestra selección de radios portátiles, móviles vehiculares, repetidores y accesorios de las marcas líderes del sector.
+            {catalogContent?.hero_description ||
+              "Explora nuestra selección de radios portátiles, móviles vehiculares, repetidores y accesorios de las marcas líderes del sector."}
           </p>
 
           {/* Desktop & Tablet Filters (Search Bar + Brands Dropdown + Horizontal Carousel) */}
@@ -557,21 +563,26 @@ function CatalogoPage() {
           <div className="relative flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#068DBB]">
-                ¿No encuentras tu equipo?
+                {catalogContent?.cta_badge || "¿No encuentras tu equipo?"}
               </span>
               <h2 className="mt-3 text-3xl font-extrabold tracking-tight md:text-4xl">
-                Cotiza soluciones a la <span className="text-gradient-brand">medida</span>
+                {catalogContent?.cta_title || "Cotiza soluciones a la"}{" "}
+                <span className="text-gradient-brand">
+                  {catalogContent?.cta_title_highlight || "medida"}
+                </span>
               </h2>
               <p className="mt-3 max-w-xl text-muted-foreground">
-                Nuestro equipo de ingenieros diseña la solución exacta para tu operación: desde una radio individual hasta redes troncalizadas multi-sitio.
+                {catalogContent?.cta_desc ||
+                  "Nuestro equipo de ingenieros diseña la solución exacta para tu operación: desde una radio individual hasta redes troncalizadas multi-sitio."}
               </p>
             </div>
             <a
-              href="https://api.whatsapp.com/send/?phone=573193053916&text=Hola,%20quisiera%20cotizar%20un%20producto&type=phone_number&app_absent=0"
+              href={catalogContent?.cta_btn_link || "https://api.whatsapp.com/send/?phone=573193053916&text=Hola,%20quisiera%20cotizar%20un%20producto&type=phone_number&app_absent=0"}
               target="_blank"
+              rel="noopener noreferrer"
               className="bg-gradient-brand ptt-button inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-glow hover:brightness-110 active:scale-95"
             >
-              Hablar con un asesor
+              {catalogContent?.cta_btn_text || "Hablar con un asesor"}
               <span aria-hidden>→</span>
             </a>
           </div>

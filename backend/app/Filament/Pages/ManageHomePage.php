@@ -72,12 +72,10 @@ class ManageHomePage extends Page
                                     ->schema([
                                         TextInput::make('hero_title')
                                             ->label('Título Principal del Hero')
-                                            ->placeholder('Ej: Comunicación crítica sin')
-                                            ->required(),
+                                            ->placeholder('Ej: Comunicación crítica sin'),
                                         TextInput::make('hero_title_highlight')
                                             ->label('Texto Destacado (Degradado Azul/Cian)')
-                                            ->placeholder('Ej: interferencias.')
-                                            ->required(),
+                                            ->placeholder('Ej: interferencias.'),
                                     ]),
                                 Textarea::make('hero_description')
                                     ->label('Descripción del Hero')
@@ -86,17 +84,23 @@ class ManageHomePage extends Page
                                 Grid::make(2)
                                     ->schema([
                                         TextInput::make('hero_button_text')
-                                            ->label('Texto del Botón')
-                                            ->required(),
+                                            ->label('Texto del Botón'),
                                         TextInput::make('hero_button_link')
-                                            ->label('Enlace del Botón')
-                                            ->required(),
+                                            ->label('Enlace del Botón'),
                                     ]),
                                 FileUpload::make('hero_image')
                                     ->label('Imagen Principal del Hero')
                                     ->image()
                                     ->directory('web-content')
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->saveUploadedFileUsing(function ($file) {
+                                        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                                        $image = $manager->decodePath($file->getRealPath());
+                                        $encoded = $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80));
+                                        $filename = 'web-content/' . \Illuminate\Support\Str::random(40) . '.webp';
+                                        \Illuminate\Support\Facades\Storage::disk('public')->put($filename, (string) $encoded);
+                                        return $filename;
+                                    }),
                                 Section::make('Datos Imagen Principal (Badges y Chips)')
                                     ->schema([
                                         Grid::make(2)
@@ -157,16 +161,24 @@ class ManageHomePage extends Page
                                     ->columnSpanFull(),
                             ]),
 
-                        Tab::make('Logos de Clientes')
+                        Tab::make('Logos de Marcas')
                             ->icon('heroicon-o-user-group')
                             ->schema([
                                 FileUpload::make('client_logos')
-                                    ->label('Cargar Logos Reales de Clientes')
+                                    ->label('Cargar logos reales de marcas')
                                     ->image()
                                     ->multiple()
                                     ->reorderable()
                                     ->directory('web-content/logos')
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->saveUploadedFileUsing(function ($file) {
+                                        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+                                        $image = $manager->decodePath($file->getRealPath());
+                                        $encoded = $image->encode(new \Intervention\Image\Encoders\WebpEncoder(80));
+                                        $filename = 'web-content/logos/' . \Illuminate\Support\Str::random(40) . '.webp';
+                                        \Illuminate\Support\Facades\Storage::disk('public')->put($filename, (string) $encoded);
+                                        return $filename;
+                                    }),
                             ]),
 
                         Tab::make('Catálogo Destacado')
@@ -174,7 +186,6 @@ class ManageHomePage extends Page
                             ->schema([
                                 TextInput::make('catalog_title')
                                     ->label('Título de la Sección')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Textarea::make('catalog_description')
                                     ->label('Descripción de la Sección')
@@ -187,7 +198,6 @@ class ManageHomePage extends Page
                             ->schema([
                                 TextInput::make('services_title')
                                     ->label('Título de Servicios')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Textarea::make('services_description')
                                     ->label('Descripción de Servicios')

@@ -36,7 +36,7 @@ class ManageAboutPage extends Page
     }
 
     protected static string|BackedEnum|null $navigationIcon = null;
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     protected string $view = 'filament.pages.manage-about-page';
 
@@ -71,12 +71,10 @@ class ManageAboutPage extends Page
                                     ->schema([
                                         TextInput::make('hero_title')
                                             ->label('Título Principal del Hero')
-                                            ->placeholder('Ej: La voz detrás de las')
-                                            ->required(),
+                                            ->placeholder('Ej: La voz detrás de las'),
                                         TextInput::make('hero_title_highlight')
                                             ->label('Texto Destacado (Gradiente Azul/Cian)')
-                                            ->placeholder('Ej: operaciones críticas.')
-                                            ->required(),
+                                            ->placeholder('Ej: operaciones críticas.'),
                                     ]),
                                 Textarea::make('hero_description')
                                     ->label('Descripción del Hero')
@@ -87,7 +85,6 @@ class ManageAboutPage extends Page
                                         TextInput::make('hero_impact_label')
                                             ->label('Etiqueta Superior de Cifras')
                                             ->placeholder('Ej: NUESTRO IMPACTO EN CIFRAS')
-                                            ->required()
                                             ->columnSpanFull(),
                                         Grid::make(2)
                                             ->schema([
@@ -115,18 +112,15 @@ class ManageAboutPage extends Page
                                 TextInput::make('story_label')
                                     ->label('Etiqueta Superior de Historia')
                                     ->placeholder('Ej: NUESTRA HISTORIA')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Grid::make(2)
                                     ->schema([
                                         TextInput::make('story_title')
                                             ->label('Título Principal de Historia')
-                                            ->placeholder('Ej: Nacidos para resolver donde la señal celular')
-                                            ->required(),
+                                            ->placeholder('Ej: Nacidos para resolver donde la señal celular'),
                                         TextInput::make('story_title_highlight')
                                             ->label('Texto Destacado (Gradiente)')
-                                            ->placeholder('Ej: no llega.')
-                                            ->required(),
+                                            ->placeholder('Ej: no llega.'),
                                     ]),
                                 Textarea::make('story_desc')
                                     ->label('Descripción de la Historia')
@@ -136,7 +130,6 @@ class ManageAboutPage extends Page
                                     ->schema([
                                         TextInput::make('certifications_label')
                                             ->label('Título de la Sección de Certificaciones')
-                                            ->required()
                                             ->columnSpanFull(),
                                         Repeater::make('certifications')
                                             ->label('Listado de Certificaciones / Aliados')
@@ -148,12 +141,10 @@ class ManageAboutPage extends Page
                                                     ->schema([
                                                         TextInput::make('name')
                                                             ->label('Nombre de la Certificación / Entidad')
-                                                            ->placeholder('Ej: Motorola Solutions Partner')
-                                                            ->required(),
+                                                            ->placeholder('Ej: Motorola Solutions Partner'),
                                                         TextInput::make('level')
                                                             ->label('Detalle Corto / Nivel')
-                                                            ->placeholder('Ej: Platinum Authorized Dealer')
-                                                            ->required(),
+                                                            ->placeholder('Ej: Platinum Authorized Dealer'),
                                                     ]),
                                             ])
                                             ->columnSpanFull(),
@@ -166,12 +157,10 @@ class ManageAboutPage extends Page
                                 TextInput::make('values_label')
                                     ->label('Etiqueta Superior de Valores')
                                     ->placeholder('Ej: NUESTROS PILARES')
-                                    ->required()
                                     ->columnSpanFull(),
                                 TextInput::make('values_title')
                                     ->label('Título de la Sección de Valores')
                                     ->placeholder('Ej: Valores que guían nuestra ingeniería')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Repeater::make('values_list')
                                     ->label('Listado de Valores Corporativos')
@@ -182,8 +171,7 @@ class ManageAboutPage extends Page
                                         Grid::make(2)
                                             ->schema([
                                                 TextInput::make('title')
-                                                    ->label('Título del Valor')
-                                                    ->required(),
+                                                    ->label('Título del Valor'),
                                                 Select::make('icon')
                                                     ->label('Icono Representativo')
                                                     ->options([
@@ -194,13 +182,11 @@ class ManageAboutPage extends Page
                                                         'handshake' => '🤝 Compromiso Humano / Aliados',
                                                         'trophy' => '🏆 Calidad ISO / Excelencia',
                                                     ])
-                                                    ->default('shield')
-                                                    ->required(),
+                                                    ->default('shield'),
                                             ]),
                                         Textarea::make('desc')
                                             ->label('Descripción del Valor')
-                                            ->rows(2)
-                                            ->required(),
+                                            ->rows(2),
                                     ])
                                     ->columnSpanFull(),
                             ]),
@@ -214,7 +200,6 @@ class ManageAboutPage extends Page
                                     ->columnSpanFull(),
                                 TextInput::make('cta_title')
                                     ->label('Título del Banner')
-                                    ->required()
                                     ->columnSpanFull(),
                                 Textarea::make('cta_desc')
                                     ->label('Descripción del Banner')
@@ -223,11 +208,9 @@ class ManageAboutPage extends Page
                                 Grid::make(2)
                                     ->schema([
                                         TextInput::make('cta_btn_text')
-                                            ->label('Texto del Botón')
-                                            ->required(),
+                                            ->label('Texto del Botón'),
                                         TextInput::make('cta_btn_link')
-                                            ->label('Enlace del Botón')
-                                            ->required(),
+                                            ->label('Enlace del Botón'),
                                     ]),
                             ]),
                     ])

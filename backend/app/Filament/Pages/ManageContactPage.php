@@ -35,7 +35,7 @@ class ManageContactPage extends Page
     }
 
     protected static string|BackedEnum|null $navigationIcon = null;
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 5;
 
     protected string $view = 'filament.pages.manage-contact-page';
 
@@ -67,12 +67,10 @@ class ManageContactPage extends Page
                                     ->schema([
                                         TextInput::make('hero_title')
                                             ->label('Título Principal del Hero')
-                                            ->placeholder('Ej: Hablemos de tus proyectos de')
-                                            ->required(),
+                                            ->placeholder('Ej: Hablemos de tus proyectos de'),
                                         TextInput::make('hero_title_highlight')
                                             ->label('Texto Destacado (Gradiente Azul/Cian)')
-                                            ->placeholder('Ej: comunicación crítica.')
-                                            ->required(),
+                                            ->placeholder('Ej: comunicación crítica.'),
                                     ]),
                                 Textarea::make('hero_description')
                                     ->label('Descripción del Hero')
@@ -93,8 +91,7 @@ class ManageContactPage extends Page
                                             ->schema([
                                                 TextInput::make('label')
                                                     ->label('Etiqueta / Nombre del Dato')
-                                                    ->placeholder('Ej: Atención Telefónica')
-                                                    ->required(),
+                                                    ->placeholder('Ej: Atención Telefónica'),
                                                 Select::make('icon')
                                                     ->label('Icono Representativo')
                                                     ->options([
@@ -105,15 +102,13 @@ class ManageContactPage extends Page
                                                         'clock' => '⏰ Horario de Atención',
                                                         'user' => '👤 Vendedor / Asesor',
                                                     ])
-                                                    ->default('phone')
-                                                    ->required(),
+                                                    ->default('phone'),
                                             ]),
                                         Grid::make(2)
                                             ->schema([
                                                 TextInput::make('text')
                                                     ->label('Texto Principal / Valor')
-                                                    ->placeholder('Ej: +57 319 305 3916')
-                                                    ->required(),
+                                                    ->placeholder('Ej: +57 319 305 3916'),
                                                 TextInput::make('sublabel')
                                                     ->label('Label Auxiliar / Nota')
                                                     ->placeholder('Ej: Respuesta en menos de 2h'),

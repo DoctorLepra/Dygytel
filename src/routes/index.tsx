@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import heroRadio from "../assets/hero-radio.jpg";
 import productHandheld from "../assets/product-handheld.jpg";
 import productMobile from "../assets/product-mobile.jpg";
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-import { useProducts, useWebContent } from "../lib/api";
+import { useProducts, useWebContent, sendContactMessage } from "../lib/api";
 import { PageLoader } from "../components/PageLoader";
 
 const brands = ["MOTOROLA", "HYTERA", "KENWOOD", "ICOM", "VERTEX", "TAIT", "SEPURA"];
@@ -52,6 +53,39 @@ function Landing() {
   const { data: content, isLoading: isLoadingContent } = useWebContent();
   const homeContent = content?.home || {};
   const showLoader = isLoadingContent || isLoadingProducts;
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formSuccess, setFormSuccess] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const handleHomeContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormLoading(true);
+    setFormError(null);
+
+    const result = await sendContactMessage({
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      origin: "Página de Inicio — Formulario Rápido",
+      message: form.message,
+    });
+
+    setFormLoading(false);
+
+    if (result.success) {
+      setFormSuccess(true);
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } else {
+      setFormError(result.message);
+    }
+  };
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
@@ -461,59 +495,96 @@ function Landing() {
             </div>
           </div>
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="glass-strong grid grid-cols-1 gap-5 rounded-3xl p-8 md:grid-cols-2"
-          >
-            <div className="space-y-2">
-              <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Nombre completo
-              </label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
-                placeholder="Juan Pérez"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Email corporativo
-              </label>
-              <input
-                type="email"
-                className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
-                placeholder="juan@empresa.com"
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Teléfono
-              </label>
-              <input
-                type="tel"
-                className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
-                placeholder="+57z ..."
-              />
-            </div>
-            <div className="space-y-2 md:col-span-2">
-              <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Mensaje
-              </label>
-              <textarea
-                rows={4}
-                className="w-full resize-none rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
-                placeholder="Describe tu proyecto o equipo de interés..."
-              />
-            </div>
-            <div className="md:col-span-2">
+          {formSuccess ? (
+            <div className="glass-strong rounded-3xl p-8 text-center animate-fade-in flex flex-col items-center justify-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-brand text-white shadow-glow text-2xl font-bold">
+                ✓
+              </div>
+              <h3 className="mt-4 text-2xl font-bold">¡Solicitud Enviada con Éxito!</h3>
+              <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                Gracias por ponerte en contacto con Dygytel. Un asesor de ingeniería revisará tu requerimiento y te contactará a la brevedad.
+              </p>
               <button
-                type="submit"
-                className="ptt-button bg-gradient-brand shadow-glow w-full rounded-full py-4 text-sm font-bold uppercase tracking-widest text-white hover:brightness-110 active:scale-[0.98]"
+                type="button"
+                onClick={() => setFormSuccess(false)}
+                className="mt-6 rounded-full bg-gradient-brand px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white shadow-glow hover:brightness-110"
               >
-                Enviar solicitud
+                Enviar otra solicitud
               </button>
             </div>
-          </form>
+          ) : (
+            <form
+              onSubmit={handleHomeContact}
+              className="glass-strong grid grid-cols-1 gap-5 rounded-3xl p-8 md:grid-cols-2"
+            >
+              {formError && (
+                <div className="md:col-span-2 rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-xs text-red-500 font-medium">
+                  ⚠️ {formError}
+                </div>
+              )}
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Nombre completo *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
+                  placeholder="Juan Pérez"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Email corporativo *
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
+                  placeholder="juan@empresa.com"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Teléfono *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className="w-full rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
+                  placeholder="+57 319 305 3916"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Mensaje *
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  className="w-full resize-none rounded-xl border border-border bg-foreground/[0.04] dark:bg-white/[0.04] px-4 py-3 text-sm outline-none transition-all focus:border-[#068DBB] focus:ring-2 focus:ring-[#068DBB]/20"
+                  placeholder="Describe tu proyecto o equipo de interés..."
+                />
+              </div>
+              <div className="md:col-span-2">
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="ptt-button bg-gradient-brand shadow-glow w-full rounded-full py-4 text-sm font-bold uppercase tracking-widest text-white hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+                >
+                  {formLoading ? "Enviando solicitud..." : "Enviar solicitud"}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </section>
     </div>

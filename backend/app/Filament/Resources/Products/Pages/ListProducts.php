@@ -23,6 +23,21 @@ class ListProducts extends ListRecords
     #[Url]
     public string $activeView = 'products';
 
+    public function mount(): void
+    {
+        parent::mount();
+
+        if (request()->filled('tableSearch')) {
+            $this->tableSearch = request()->query('tableSearch');
+            $this->activeView = 'products';
+        }
+
+        if (request()->filled('record')) {
+            $this->activeView = 'products';
+            $this->mountTableAction('edit', strval(request()->query('record')));
+        }
+    }
+
     public function setView(string $view): void
     {
         $this->activeView = $view;

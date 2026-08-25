@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { useProduct, useProducts } from "../lib/api";
 import { PageLoader } from "../components/PageLoader";

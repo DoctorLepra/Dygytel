@@ -28,6 +28,48 @@ class ProductResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
 
     /**
+     * Define globally searchable attributes (name, sku, brand, category).
+     */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'sku', 'brand', 'category'];
+    }
+
+    /**
+     * Customize the title of global search results.
+     */
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        /** @var Product $record */
+        return "{$record->name} — SKU: {$record->sku}";
+    }
+
+    /**
+     * Additional details displayed in the global search dropdown.
+     */
+    public static function getGlobalSearchResultDetails(\Illuminate\Database\Eloquent\Model $record): array
+    {
+        /** @var Product $record */
+        return [
+            'SKU' => $record->sku,
+            'Marca' => $record->brand ?? '—',
+            'Categoría' => $record->category ?? '—',
+        ];
+    }
+
+    /**
+     * Navigate to products table filtering by the selected product's SKU.
+     */
+    public static function getGlobalSearchResultUrl(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        /** @var Product $record */
+        return static::getUrl('index', [
+            'tableSearch' => $record->sku,
+            'record' => (string) $record->getKey(),
+        ]);
+    }
+
+    /**
      * Strict Authorization: Only Administrators can view and manage products.
      */
     public static function canViewAny(): bool

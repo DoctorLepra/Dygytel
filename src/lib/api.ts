@@ -224,3 +224,87 @@ export const useWebContent = () => {
     retry: 1,
   });
 };
+
+export interface Attachment {
+  id: number;
+  title: string;
+  file_path: string;
+  file_url: string;
+  sort_order: number;
+}
+
+// Fetch public attachments with safe fallback
+export const fetchAttachments = async (): Promise<Attachment[]> => {
+  try {
+    const response = await fetchWithTimeout(`${API_URL}/attachments`);
+    if (!response.ok) return [];
+    const data = await response.json();
+    if (!Array.isArray(data)) return [];
+    const baseUrl = API_URL.replace(/\/api\/?$/, '');
+    return data.map((item: any) => ({
+      ...item,
+      file_url: item.file_path?.startsWith('http')
+        ? item.file_path
+        : `${baseUrl}/storage/${item.file_path}`,
+    }));
+  } catch (error) {
+    console.warn("API Attachments unreachable:", error);
+    return [];
+  }
+};
+
+export const useAttachments = () => {
+  return useQuery({
+    queryKey: ["attachments"],
+    queryFn: fetchAttachments,
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 60,
+    retry: 1,
+  });
+};
+
+export interface ContactMessagePayload {
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  request_type?: string;
+  origin?: string;
+  message: string;
+}
+
+export const sendContactMessage = async (
+  payload: ContactMessagePayload
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await fetch(`${API_URL}/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const errorMsg =
+        data?.message || "No se pudo enviar el mensaje. Por favor intenta más tarde.";
+      return { success: false, message: errorMsg };
+    }
+
+    return {
+      success: true,
+      message:
+        data?.message || "¡Tu mensaje ha sido enviado exitosamente!",
+    };
+  } catch (error: any) {
+    console.error("Error sending contact message:", error);
+    return {
+      success: false,
+      message:
+        "Error de conexión con el servidor. Por favor intenta de nuevo o escríbenos por WhatsApp.",
+    };
+  }
+};

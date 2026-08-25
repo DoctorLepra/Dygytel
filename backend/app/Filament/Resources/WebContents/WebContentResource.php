@@ -24,7 +24,7 @@ class WebContentResource extends Resource
     protected static bool $shouldRegisterNavigation = false;
     protected static ?int $navigationSort = 2;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-computer-desktop';
+    protected static string|BackedEnum|null $navigationIcon = null;
 
     protected static ?string $recordTitleAttribute = 'key';
 

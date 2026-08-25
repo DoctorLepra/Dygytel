@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
+import { useAttachments } from "../lib/api";
 
 export function Footer() {
+  const { data: attachments = [] } = useAttachments();
   return (
     <footer className="relative border-t border-border/60 bg-background/80 backdrop-blur-md pt-16 pb-8 text-foreground">
       {/* Background glow */}
@@ -176,19 +178,44 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 flex flex-col items-center justify-between gap-4 md:flex-row text-xs text-muted-foreground font-mono">
-          <span>
-            © {new Date().getFullYear()} Dygytel Telecomunicaciones. Todos los derechos reservados.
-          </span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">
-              Políticas de privacidad
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Términos del servicio
-            </a>
-            <a href="http://127.0.0.1:8000/admin" className="hover:text-[#068DBB] transition-colors">
-              Administrador
+        <div className="pt-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center text-xs text-muted-foreground font-mono">
+          <div className="flex flex-col gap-2">
+            <span>
+              © {new Date().getFullYear()} Dygytel Telecomunicaciones. Todos los derechos reservados.
+            </span>
+            {attachments.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground/80">
+                {attachments.map((a, idx) => (
+                  <span key={a.id} className="inline-flex items-center gap-4">
+                    <a
+                      href={a.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-foreground hover:underline transition-colors"
+                    >
+                      {a.title}
+                    </a>
+                    {idx < attachments.length - 1 && (
+                      <span className="text-muted-foreground/40 font-normal">·</span>
+                    )}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center gap-4 text-[11px] text-muted-foreground/80">
+                <a href="#" className="hover:text-foreground transition-colors">
+                  Políticas de privacidad
+                </a>
+                <span className="text-muted-foreground/40 font-normal">·</span>
+                <a href="#" className="hover:text-foreground transition-colors">
+                  Términos del servicio
+                </a>
+              </div>
+            )}
+          </div>
+          <div>
+            <a href="http://127.0.0.1:8000/admin" className="hover:text-[#068DBB] transition-colors whitespace-nowrap">
+              Administrador ↗
             </a>
           </div>
         </div>

@@ -37,11 +37,12 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Panel Administrativo Dygytel')
             ->favicon(asset('icono.png'))
             ->brandLogo(asset('Logo2.png'))
-            ->brandLogoHeight('1.75rem')
+            ->brandLogoHeight('2.75rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 \App\Filament\Pages\ManageHomePage::class,
+                \App\Filament\Pages\ManageCatalogPage::class,
                 \App\Filament\Pages\ManageServicesPage::class,
                 \App\Filament\Pages\ManageAboutPage::class,
                 \App\Filament\Pages\ManageContactPage::class,
@@ -76,7 +77,16 @@ class AdminPanelProvider extends PanelProvider
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
                     <style>
-                        /* Force 4px vertical gap between Productos and Secciones CMS */
+                        /* Brand Logo Sizing */
+                        .fi-logo img,
+                        .fi-sidebar-header img,
+                        a.fi-logo img {
+                            height: 2.75rem !important;
+                            max-height: 2.75rem !important;
+                            width: auto !important;
+                        }
+
+                        /* Force 4px vertical gap between Productos, Usuarios and Secciones CMS */
                         ul.fi-sidebar-nav-groups,
                         .fi-sidebar-nav-groups,
                         aside.fi-sidebar nav,
@@ -109,6 +119,31 @@ class AdminPanelProvider extends PanelProvider
                         .fi-sidebar-item {
                             margin-top: 0.125rem !important;
                             margin-bottom: 0.125rem !important;
+                        }
+
+                        /* Homogenize sidebar inactive items and group headers (Usuarios vs Secciones CMS) */
+                        aside.fi-sidebar .fi-sidebar-item:not(.fi-active) .fi-sidebar-item-label,
+                        aside.fi-sidebar .fi-sidebar-group-label,
+                        aside.fi-sidebar .fi-sidebar-group-btn span,
+                        .fi-sidebar-group-label,
+                        .fi-sidebar-item:not(.fi-active) .fi-sidebar-item-label {
+                            color: #475569 !important;
+                            font-weight: 500 !important;
+                            font-size: 0.875rem !important;
+                        }
+
+                        aside.fi-sidebar .fi-sidebar-item:not(.fi-active) .fi-sidebar-item-icon,
+                        aside.fi-sidebar .fi-sidebar-group-btn svg,
+                        .fi-sidebar-group-btn svg {
+                            color: #64748b !important;
+                        }
+
+                        /* Smooth hover effects */
+                        aside.fi-sidebar .fi-sidebar-item:not(.fi-active):hover .fi-sidebar-item-label,
+                        aside.fi-sidebar .fi-sidebar-item:not(.fi-active):hover .fi-sidebar-item-icon,
+                        aside.fi-sidebar .fi-sidebar-group-btn:hover .fi-sidebar-group-label,
+                        aside.fi-sidebar .fi-sidebar-group-btn:hover svg {
+                            color: #068dbb !important;
                         }
                     </style>
                 '

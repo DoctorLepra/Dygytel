@@ -43,13 +43,12 @@ class ResetPasswordNotification extends Notification
         );
 
         return (new MailMessage)
-            ->subject('Restablecimiento de Contraseña — Dygytel Console')
-            ->greeting('¡Hola ' . $notifiable->name . '!')
-            ->line('Recibimos una solicitud para restablecer la contraseña de acceso a tu cuenta en la consola Dygytel.')
-            ->line('Para definir una nueva contraseña segura, haz clic en el siguiente botón:')
-            ->action('Restablecer mi Contraseña', $url)
-            ->line('Por motivos de seguridad, este enlace expirará en 2 horas.')
-            ->line('Si tú no solicitaste este restablecimiento, no se requiere ninguna acción adicional.');
+            ->subject('Restablecimiento de Contraseña — Dygytel')
+            ->view('emails.password-reset', [
+                'user' => $notifiable,
+                'url' => $url,
+                'expireHours' => 2,
+            ]);
     }
 
     /**

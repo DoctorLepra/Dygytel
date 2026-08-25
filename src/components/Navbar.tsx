@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
+import { useAttachments } from "../lib/api";
 
 const navLinks = [
   { label: "Inicio", to: "/" },
@@ -12,6 +13,7 @@ const navLinks = [
 export function Navbar() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: attachments = [] } = useAttachments();
 
   // Close mobile menu on route change & manage body scroll lock
   useEffect(() => {
@@ -149,6 +151,23 @@ export function Navbar() {
             <div className="text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               Dygytel — Radiocomunicación Profesional
             </div>
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground/80">
+                {attachments.map((a, idx) => (
+                  <span key={a.id} className="inline-flex items-center gap-3">
+                    <a
+                      href={a.file_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-foreground hover:underline transition-colors"
+                    >
+                      {a.title}
+                    </a>
+                    {idx < attachments.length - 1 && <span>·</span>}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -17,3 +17,5 @@ Route::get('/brands', function () {
     return response()->json(\App\Models\Brand::orderBy('name')->pluck('name'));
 });
 Route::get('/content', [\App\Http\Controllers\Api\WebContentController::class, 'index']);
+Route::get('/attachments', [\App\Http\Controllers\Api\AttachmentController::class, 'index']);
+Route::post('/contact', [\App\Http\Controllers\Api\ContactController::class, 'send'])->middleware('throttle:6,1');

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { useWebContent } from "../lib/api";
+import { useWebContent, sendContactMessage } from "../lib/api";
 import { PageLoader } from "../components/PageLoader";
 
 export const Route = createFileRoute("/contacto")({
@@ -137,14 +137,30 @@ function ContactoPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setErrorMsg(null);
+
+    const result = await sendContactMessage({
+      name: formState.nombre,
+      email: formState.email,
+      phone: formState.telefono,
+      company: formState.empresa,
+      request_type: formState.tipoSolicitud,
+      origin: "Página de Contacto",
+      message: formState.mensaje,
+    });
+
+    setLoading(false);
+
+    if (result.success) {
       setSubmitted(true);
-    }, 1000);
+    } else {
+      setErrorMsg(result.message);
+    }
   };
 
   return (
@@ -240,6 +256,11 @@ function ContactoPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                  {errorMsg && (
+                    <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4 text-xs text-red-500 font-medium animate-fade-in">
+                      ⚠️ {errorMsg}
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
