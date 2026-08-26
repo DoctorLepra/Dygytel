@@ -5,8 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'backend/**'
-  workflow_dispatch: # Permite ejecutar el despliegue manualmente desde la pestaña Actions en GitHub
+      - 'backend/app/**'
+      - 'backend/bootstrap/**'
+      - 'backend/config/**'
+      - 'backend/database/**'
+      - 'backend/resources/**'
+      - 'backend/routes/**'
+      - 'backend/artisan'
+      - 'backend/composer.json'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
 
 jobs:
   web-deploy:
@@ -18,7 +26,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Sincronizar Archivos del Backend por FTP
+      - name: Sincronizar Código del Backend por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -31,10 +39,12 @@ jobs:
             **/.git*
             **/.git*/**
             **/.env*
+            **/vendor/**
             **/storage/**
             **/storage/logs/**
             **/tests/**
             **/node_modules/**
+            **/backendProduction/**
             **/production_database.sql
             **/*.sqlite
             **/*.sqlite-*
