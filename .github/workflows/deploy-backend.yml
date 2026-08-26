@@ -1,0 +1,40 @@
+name: Despliegue Backend a cPanel HostGator
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+  workflow_dispatch: # Permite ejecutar el despliegue manualmente desde la pestaña Actions en GitHub
+
+jobs:
+  web-deploy:
+    name: Sincronizar Backend con HostGator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar Código desde GitHub
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Sincronizar Archivos del Backend por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /backend/
+          local-dir: ./backend/
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.env*
+            **/storage/**
+            **/storage/logs/**
+            **/tests/**
+            **/node_modules/**
+            **/production_database.sql
+            **/*.sqlite
+            **/*.sqlite-*
