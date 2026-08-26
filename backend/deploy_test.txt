@@ -1,0 +1,6 @@
+====================================================
+PRUEBA DE DESPLIEGUE AUTOMATICO VIA GITHUB ACTIONS
+Proyecto: Dygytel CMS
+Fecha: 2026-08-26 02:20:00
+Estado: GitHub Actions conectado exitosamente con cPanel
+====================================================

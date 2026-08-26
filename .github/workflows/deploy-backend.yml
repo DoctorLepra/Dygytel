@@ -5,14 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'backend/app/**'
-      - 'backend/bootstrap/**'
-      - 'backend/config/**'
-      - 'backend/database/**'
-      - 'backend/resources/**'
-      - 'backend/routes/**'
-      - 'backend/artisan'
-      - 'backend/composer.json'
+      - 'backend/**'
       - '.github/workflows/deploy-backend.yml'
   workflow_dispatch:
 
