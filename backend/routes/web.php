@@ -6,7 +6,7 @@ use App\Http\Controllers\SetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to('/admin/login');
 });
 
 Route::middleware('web')->group(function () {

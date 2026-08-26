@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useAttachments } from "../lib/api";
+import { useAttachments, getAdminUrl } from "../lib/api";
 
 export function Footer() {
   const { data: attachments = [] } = useAttachments();
@@ -214,7 +214,7 @@ export function Footer() {
             )}
           </div>
           <div>
-            <a href="http://127.0.0.1:8000/admin" className="hover:text-[#068DBB] transition-colors whitespace-nowrap">
+            <a href={getAdminUrl()} className="hover:text-[#068DBB] transition-colors whitespace-nowrap">
               Administrador ↗
             </a>
           </div>

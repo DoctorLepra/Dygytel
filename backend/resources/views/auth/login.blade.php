@@ -478,7 +478,7 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                         </svg>
                     </button>
-                    <a href="http://localhost:8080">← Volver al Sitio</a>
+                    <a href="{{ config('app.frontend_url', 'https://dygytel.com') }}">← Volver al Sitio</a>
                 </div>
             </div>
         </div>

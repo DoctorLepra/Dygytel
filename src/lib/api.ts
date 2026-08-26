@@ -60,6 +60,11 @@ const resolveImages = (img: any): string[] => {
   return [];
 };
 
+export const getAdminUrl = (): string => {
+  const baseUrl = API_URL.replace(/\/api\/?$/, '');
+  return `${baseUrl}/admin`;
+};
+
 const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeoutMs = 2500): Promise<Response> => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
