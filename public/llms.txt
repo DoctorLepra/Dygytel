@@ -15,6 +15,6 @@
 - Estudios de cobertura RF y diseño de redes críticas
 
 ## Contacto & Canales Directos
-- Sitio Web: https://dygytel.vercel.app
-- Catálogo: https://dygytel.vercel.app/catalogo
+- Sitio Web: https://dygytel.com
+- Catálogo: https://dygytel.com/catalogo
 - WhatsApp de Ingeniería: https://api.whatsapp.com/send/?phone=573193053916

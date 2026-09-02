@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://dygytel.vercel.app/sitemap.xml
+Sitemap: https://dygytel.com/sitemap.xml

@@ -2,5 +2,17 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "vite"
+  "framework": "vite",
+  "redirects": [
+    { "source": "/about-1", "destination": "/nosotros", "permanent": true },
+    { "source": "/about", "destination": "/nosotros", "permanent": true },
+    { "source": "/quienes-somos", "destination": "/nosotros", "permanent": true },
+    { "source": "/tienda", "destination": "/catalogo", "permanent": true },
+    { "source": "/shop-default-page", "destination": "/catalogo", "permanent": true },
+    { "source": "/shop", "destination": "/catalogo", "permanent": true },
+    { "source": "/productos", "destination": "/catalogo", "permanent": true },
+    { "source": "/contactanos", "destination": "/contacto", "permanent": true },
+    { "source": "/contact", "destination": "/contacto", "permanent": true },
+    { "source": "/services", "destination": "/servicios", "permanent": true }
+  ]
 }
