@@ -13,6 +13,7 @@
     { "source": "/productos", "destination": "/catalogo", "permanent": true },
     { "source": "/contactanos", "destination": "/contacto", "permanent": true },
     { "source": "/contact", "destination": "/contacto", "permanent": true },
-    { "source": "/services", "destination": "/servicios", "permanent": true }
+    { "source": "/services", "destination": "/servicios", "permanent": true },
+    { "source": "/cpanel", "destination": "https://admin.dygytel.com:2083", "permanent": false }
   ]
 }
