@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import heroRadio from "../assets/hero-radio.jpg";
 import productHandheld from "../assets/product-handheld.jpg";
 import productMobile from "../assets/product-mobile.jpg";
@@ -53,6 +53,29 @@ function Landing() {
   const { data: content, isLoading: isLoadingContent } = useWebContent();
   const homeContent = content?.home || {};
   const showLoader = isLoadingContent || isLoadingProducts;
+
+  const homeServices = useMemo(() => {
+    const raw = (content as any)?.services?.services_list;
+    let list: any[] = [];
+    if (Array.isArray(raw)) {
+      list = raw;
+    } else if (typeof raw === "string") {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) list = parsed;
+      } catch (e) {}
+    }
+
+    if (list.length > 0) {
+      return list.slice(0, 3).map((s: any, idx: number) => ({
+        n: s.num || (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
+        title: s.title || "",
+        description: s.shortDesc || s.longDesc || "",
+      }));
+    }
+
+    return services;
+  }, [(content as any)?.services?.services_list]);
 
   const [form, setForm] = useState({
     name: "",
@@ -444,12 +467,10 @@ function Landing() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {services.slice(0, 3).map((s: any) => (
-            <a
-              href={homeContent.hero_button_link || "https://api.whatsapp.com/send/?phone=573193053916"}
-              target="_blank"
-              rel="noreferrer"
-              key={s.n}
+          {homeServices.slice(0, 3).map((s: any) => (
+            <Link
+              to="/servicios"
+              key={s.n || s.title}
               className="glass group relative overflow-hidden rounded-3xl p-8 transition-all hover:-translate-y-1 hover:shadow-glow block"
             >
               <div className="bg-gradient-brand shadow-glow mb-6 flex h-14 w-14 items-center justify-center rounded-2xl font-mono font-bold text-white">
@@ -460,7 +481,7 @@ function Landing() {
               <div className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#068DBB] opacity-0 transition-opacity group-hover:opacity-100">
                 Saber más →
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </section>

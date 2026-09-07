@@ -23,6 +23,7 @@ export type Product = {
   features: string[];
   inBox: string[];
   specs: ProductSpec[];
+  pdfSpecs?: string | null;
 };
 
 export const products: Product[] = [

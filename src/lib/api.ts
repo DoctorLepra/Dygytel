@@ -60,6 +60,13 @@ const resolveImages = (img: any): string[] => {
   return [];
 };
 
+const resolveFileUrl = (path: any): string | null => {
+  if (!path || typeof path !== 'string' || !path.trim()) return null;
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const baseUrl = API_URL.replace(/\/api\/?$/, '');
+  return `${baseUrl}/storage/${path.replace(/^\/+/, '')}`;
+};
+
 export const getAdminUrl = (): string => {
   const baseUrl = API_URL.replace(/\/api\/?$/, '');
   return `${baseUrl}/admin`;
@@ -102,6 +109,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
         features: parseArray(item.features),
         inBox: parseArray(item.in_the_box),
         specs: parseSpecs(item.specs),
+        pdfSpecs: item.pdf_specs_url || resolveFileUrl(item.pdf_specs),
       };
     });
   } catch (error) {
@@ -136,6 +144,7 @@ export const fetchProductBySku = async (sku: string): Promise<Product> => {
       features: parseArray(item.features),
       inBox: parseArray(item.in_the_box),
       specs: parseSpecs(item.specs),
+      pdfSpecs: item.pdf_specs_url || resolveFileUrl(item.pdf_specs),
     };
   } catch (error) {
     console.warn("API ProductBySku unreachable, using static fallback:", error);

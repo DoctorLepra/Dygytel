@@ -103,6 +103,17 @@ class ProductForm
                         \Illuminate\Support\Facades\Storage::disk('public')->put($filename, (string) $encoded);
                         return $filename;
                     }),
+                FileUpload::make('pdf_specs')
+                    ->label('Ficha Técnica / Especificaciones (PDF)')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->disk('public')
+                    ->directory('products/specs')
+                    ->downloadable()
+                    ->openable()
+                    ->previewable(false)
+                    ->maxSize(25600)
+                    ->helperText('Opcional. Sube el documento PDF con las especificaciones o ficha técnica del producto.')
+                    ->columnSpanFull(),
             ]);
     }
 }

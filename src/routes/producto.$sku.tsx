@@ -266,21 +266,51 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
             </div>
 
             {/* Specs */}
-            <div className="glass-strong rounded-3xl p-8">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#068DBB]">
-                Especificaciones técnicas
-              </span>
-              <h2 className="mt-2 text-2xl font-extrabold tracking-tight">Ficha técnica</h2>
-              <dl className="mt-6 divide-y divide-border">
-                {product.specs.map((s: { label: string; value: string }) => (
-                  <div key={s.label} className="flex items-center justify-between py-3">
-                    <dt className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                      {s.label}
-                    </dt>
-                    <dd className="text-right text-sm font-semibold">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
+            <div className="glass-strong flex flex-col justify-between rounded-3xl p-8">
+              <div>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#068DBB]">
+                  Especificaciones técnicas
+                </span>
+                <h2 className="mt-2 text-2xl font-extrabold tracking-tight">Ficha técnica</h2>
+                <dl className="mt-6 divide-y divide-border">
+                  {product.specs.map((s: { label: string; value: string }) => (
+                    <div key={s.label} className="flex items-center justify-between py-3">
+                      <dt className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {s.label}
+                      </dt>
+                      <dd className="text-right text-sm font-semibold">{s.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              {product.pdfSpecs && (
+                <div className="mt-8 border-t border-border pt-6">
+                  <a
+                    href={product.pdfSpecs}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gradient-brand ptt-button inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-glow hover:brightness-110 active:scale-95 transition-all"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="flex-none"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>Descargar especificaciones</span>
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
