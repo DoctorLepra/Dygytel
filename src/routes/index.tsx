@@ -328,7 +328,7 @@ function Landing() {
                         key={i}
                         src={logoUrl}
                         alt="Logo cliente Dygytel"
-                        className="h-12 w-auto max-w-[140px] object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
+                        className="h-[72px] w-auto max-w-[210px] object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
                       />
                     ))}
                   </div>
@@ -338,7 +338,7 @@ function Landing() {
                         key={`dup-${i}`}
                         src={logoUrl}
                         alt="Logo cliente Dygytel"
-                        className="h-12 w-auto max-w-[140px] object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
+                        className="h-[72px] w-auto max-w-[210px] object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
                       />
                     ))}
                   </div>
@@ -351,7 +351,7 @@ function Landing() {
                 {[...brands, ...brands].map((b, i) => (
                   <span
                     key={i}
-                    className="text-2xl font-black tracking-tighter text-foreground/30 transition-colors hover:text-[#068DBB]"
+                    className="text-4xl font-black tracking-tighter text-foreground/30 transition-colors hover:text-[#068DBB]"
                   >
                     {b}
                   </span>
@@ -361,7 +361,7 @@ function Landing() {
                 {[...brands, ...brands].map((b, i) => (
                   <span
                     key={`dup-${i}`}
-                    className="text-2xl font-black tracking-tighter text-foreground/30 transition-colors hover:text-[#068DBB]"
+                    className="text-4xl font-black tracking-tighter text-foreground/30 transition-colors hover:text-[#068DBB]"
                   >
                     {b}
                   </span>
