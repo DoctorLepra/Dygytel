@@ -308,7 +308,7 @@ function Landing() {
       {/* Brands / Client Logos Marquee */}
       <section className="relative py-12">
         <div className="mx-auto mb-8 max-w-7xl px-6 text-center">
-          <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground">
+          <h3 className="font-mono text-[18.2px] font-bold uppercase tracking-[0.3em] text-muted-foreground">
             Distribuidores Autorizados
           </h3>
         </div>
