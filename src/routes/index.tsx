@@ -410,12 +410,12 @@ function Landing() {
               >
                 <div>
                   <Link to="/producto/$sku" params={{ sku: p.sku }} className="block">
-                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/60">
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/10 to-transparent" />
+                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/90 dark:bg-white/95 p-4 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/5 to-transparent pointer-events-none" />
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   </Link>

@@ -28,12 +28,6 @@ class ProductForm
                 Textarea::make('description')
                     ->label('Descripción')
                     ->columnSpanFull(),
-                TextInput::make('price')
-                    ->label('Precio')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$')
-                    ->columnSpanFull(),
                 Grid::make(2)
                     ->columnSpanFull()
                     ->schema([

@@ -135,12 +135,12 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
             {/* Image */}
             <div className="glass relative overflow-hidden rounded-3xl p-8">
 
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/60">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/10 to-transparent" />
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-white/90 dark:bg-white/95 flex items-center justify-center p-4 sm:p-6 shadow-inner">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/5 to-transparent pointer-events-none" />
                 <img
                   src={images[activeIndex] || product.image}
                   alt={`${product.name} - Vista ${activeIndex + 1}`}
-                  className="h-full w-full object-cover transition-opacity duration-500"
+                  className="h-full w-full object-contain transition-opacity duration-500 drop-shadow-sm"
                 />
               </div>
               {images.length > 1 && (
@@ -149,14 +149,14 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
                     <button
                       key={i}
                       onClick={() => setActiveIndex(i)}
-                      className={`glass-subtle relative h-20 w-20 flex-none overflow-hidden rounded-xl transition-all ${
-                        activeIndex === i ? "opacity-100 ring-2 ring-[#068DBB]" : "opacity-60 hover:opacity-100"
+                      className={`relative h-20 w-20 flex-none overflow-hidden rounded-xl bg-white/90 dark:bg-white/95 p-1.5 flex items-center justify-center transition-all ${
+                        activeIndex === i ? "opacity-100 ring-2 ring-[#068DBB] shadow-glow" : "opacity-60 hover:opacity-100 ring-1 ring-border"
                       }`}
                     >
                       <img
                         src={img}
                         alt={`Miniatura ${i + 1}`}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-contain"
                       />
                     </button>
                   ))}
@@ -182,14 +182,6 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
               </h1>
               <p className="mt-4 text-lg text-muted-foreground">{product.longDescription}</p>
 
-              <div className="mt-8 flex items-baseline gap-3">
-                <span className="text-4xl font-extrabold">
-                  {product.price}
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                   · IVA incluido
-                </span>
-              </div>
 
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -341,12 +333,12 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
                     params={{ sku: p.sku }}
                     className="glass group relative block overflow-hidden rounded-3xl p-6 transition-all hover:-translate-y-1 hover:shadow-glow"
                   >
-                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/60">
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/10 to-transparent" />
+                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/90 dark:bg-white/95 p-4 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/5 to-transparent pointer-events-none" />
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                     <div className="flex items-center justify-between">
@@ -358,11 +350,8 @@ function ProductDetailPage({ product, allProducts }: { product: any, allProducts
                       </span>
                     </div>
                     <h3 className="mt-2 text-lg font-bold tracking-tight">{p.name}</h3>
-                    <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
-                      <span className="font-extrabold">
-                        {p.price}
-                      </span>
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#068DBB]">
+                    <div className="mt-4 flex items-center justify-center border-t border-border pt-4">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-widest text-[#068DBB]">
                         Ver detalle →
                       </span>
                     </div>

@@ -480,12 +480,12 @@ function CatalogoPage() {
                 <div>
 
                   <Link to="/producto/$sku" params={{ sku: p.sku }} className="block">
-                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/60">
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/10 to-transparent" />
+                    <div className="relative mb-6 aspect-square overflow-hidden rounded-2xl bg-white/90 dark:bg-white/95 p-4 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0FD4D4]/5 to-transparent pointer-events-none" />
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
                   </Link>
@@ -502,14 +502,11 @@ function CatalogoPage() {
                   </Link>
                   <p className="mt-2 text-sm text-muted-foreground">{p.description}</p>
                 </div>
-                <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-                  <span className="text-lg font-extrabold">
-                    {p.price}
-                  </span>
+                <div className="mt-6 flex items-center justify-center border-t border-border pt-4">
                   <Link
                     to="/producto/$sku"
                     params={{ sku: p.sku }}
-                    className="ptt-button rounded-full bg-gradient-brand px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white hover:brightness-110 active:scale-95"
+                    className="ptt-button rounded-full bg-gradient-brand px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white hover:brightness-110 active:scale-95 text-center"
                   >
                     Ver detalle
                   </Link>
